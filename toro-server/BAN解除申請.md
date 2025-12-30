@@ -1,0 +1,21 @@
+---
+url: https://seesaawiki.jp/toro_server/d/BAN%B2%F2%BD%FC%BF%BD%C0%C1
+title: BAN解除申請
+---
+
+### BANなどの解除をして欲しい時は...
+
+TORO ServerでBAN処罰やミュート処罰などを受けた際、異議申立や解除申請などは以下のGoogleフォームよりお問い合わせください。  
+当WikiにBAN解除申請のコメントを行なわれても、原則対応いたしません。  
+<https://forms.gle/7eDyTe7JNAriKamg9>
+
+### 処罰解除情報
+
+処罰解除の可否は、審議完了後3か月間掲載されます。  
+
+| Minecraft ID | 処罰の種類 | 解除の可否 | 備考 | 掲載日時 |
+| --- | --- | --- | --- | --- |
+| 例)Example123 | ShareBAN | 否決 | 掲載例 | yyyy/mm/dd |
+| Raizinnkaz1289 | Jail | 解除 |  | 2025/09/19 |
+| syunta\_ | Jail | 否決 |  | 2025/09/19 |
+| 統合版 | 処罰データなし | - | ユーザ名を入力頂けないと処罰の解除はできません。 | 2025/10/27 |
