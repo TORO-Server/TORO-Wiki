@@ -7,7 +7,7 @@ title: プラグイン：ImageOnMap
 
 [![](../attachments/c1c7012b7e8c6a0f95800add33b29ff8.png)](https://image02.seesaawiki.jp/t/r/toro_server/JbY9OXoHq3.png)  
 ImageOnMapは、諸事情により60枚までとなっております。  
-制限なく画像をマイクラ内で使いたい場合は→[[Mod：MarumaSign|MarumaSign]]
+制限なく画像をマイクラ内で使いたい場合は→[MarumaSign](Mod%EF%BC%9AMarumaSign.md)
 
 ### 概要
 

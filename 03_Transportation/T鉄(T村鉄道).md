@@ -6,7 +6,7 @@ title: T鉄(T村鉄道)
 このページでは、T鉄(T村鉄道)について紹介します。  
 **注意このページは古いです。最新版はこちら。**  
 最新版↓  
-[[Tvillagerailway|T村鉄道]]  
+[T村鉄道](Tvillagerailway.md)  
   
 
 #### T鉄本線

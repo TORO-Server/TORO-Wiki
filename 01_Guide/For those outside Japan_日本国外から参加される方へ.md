@@ -3,7 +3,7 @@ url: https://seesaawiki.jp/toro_server/d/For%20those%20outside%20Japan/%C6%FC%CB
 title: For those outside Japan/日本国外から参加される方へ
 ---
 
-海外からの参加者向けのページです。日本語でのルール等は[[ルール]]、[[利用規約]]をご参照ください。  
+海外からの参加者向けのページです。日本語でのルール等は[ルール](%E3%83%AB%E3%83%BC%E3%83%AB.md)、[利用規約](%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84.md)をご参照ください。  
   
   
 

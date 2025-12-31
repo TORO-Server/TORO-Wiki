@@ -6,7 +6,7 @@ title: Mod：MarumaSign
 ### 注意事項
 
 ModはJava版限定要素となっております。  
-BEでも見えるように画像を使いたかったら→[[プラグイン：ImageOnMap|ImageOnMap]]
+BEでも見えるように画像を使いたかったら→[ImageOnMap](%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%EF%BC%9AImageOnMap.md)
 
 ### 概要
 

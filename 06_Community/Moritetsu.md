@@ -5,7 +5,7 @@ title: Moritetsu
 
 森鉄(正式名称:平原鉄道)はサーバーの東西を横断し、彩都・スポーン・札幌などの主要都市を結ぶ他、北海県などにも路線を展開し、北海県内の鉄道を担う北鉄(正式名称:北海鉄道)の親会社です。  
 このページでは、森鉄・北鉄の路線案内・利用案内を記載しています。  
-※利用に関係のない設定(妄想)情報は[[ForestRapidTransitRailway|こちら]]  
+※利用に関係のない設定(妄想)情報は[こちら](../03_Transportation/ForestRapidTransitRailway.md)  
 
 ![](../attachments/386696e9903dfdfe8057eaf0b13380d0.gif)
 
@@ -34,8 +34,8 @@ title: Moritetsu
 ### 利用案内
 
 * 下車後、使用しなくなったトロッコは消去してください。他の方が利用する際の迷惑になったり、サーバーの負荷になる可能性があります。
-* 全線でTOROSERVER交通系ICシステム、[[TOROpassシステム|TOROPASS]]が使用できます。
-* 全線で、[[TrainCarts]]を使用した自動運転が設定されています。
+* 全線でTOROSERVER交通系ICシステム、[TOROPASS](../03_Transportation/TOROpass%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0.md)が使用できます。
+* 全線で、[TrainCarts](../02_Plugins/TrainCarts.md)を使用した自動運転が設定されています。
 
 ### 路線案内
 

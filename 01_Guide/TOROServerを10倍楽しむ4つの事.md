@@ -16,16 +16,16 @@ title: TOROServerを10倍楽しむ4つの事
 
 このサーバーでは[MarumaSign](https://github.com/TORO-Server/MarumaSign)と呼ばれるMODが良く使用されています。
 このMODは看板を使用して画像を表示させることができるMODです。サーバー内にある町や道路に使用されています。
-詳しくは[[Mod：MarumaSign]]をご覧ください。
+詳しくは[Mod：MarumaSign](../02_Plugins/Mod%EF%BC%9AMarumaSign.md)をご覧ください。
 
 ### WorldEditを使ってみよう
 
-このサーバーには[[WorldEdit]]が導入されています。
+このサーバーには[WorldEdit](../02_Plugins/WorldEdit.md)が導入されています。
 このプラグインは大規模建築を補助するもので簡単に大規模なブロック設置ができます。
 詳しくは解説ページをご覧ください。
 
 ### Discordに参加してみよう
 
 このサーバーには公式のDiscordサーバーがあります。
-[Discord](Discordについて|Discord)とはゲーマー向きに開発されたチャットアプリで、テキストチャットだけでなくボイスチャット、さらにはBotを利用して音楽を聴くこともできます。
+[Discord](Discordについて)とはゲーマー向きに開発されたチャットアプリで、テキストチャットだけでなくボイスチャット、さらにはBotを利用して音楽を聴くこともできます。
 Minecraftサーバーに参加していない状態でもこのDiscordを介せば話をすることもできます。

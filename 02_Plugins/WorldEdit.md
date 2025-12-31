@@ -226,7 +226,7 @@ TORO Serverでは WorldEdit という建築補助プラグインが導入され�
 | 色板ガラス | 165:色コード |
 
 ブロックのIDを調べたい時はこちら（英語）[Minecraft ID List](https://minecraft-ids.grahamedgecombe.com/)  
-またはこちら（Wiki内）[[アイテムID一覧]]
+またはこちら（Wiki内）[アイテムID一覧](../05_Data/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0ID%E4%B8%80%E8%A6%A7.md)
 
 #### 色コード
 
@@ -261,4 +261,4 @@ TORO Serverでは WorldEdit という建築補助プラグインが導入され�
 わからないことがございましたら運営や他の住民の方へお聞きいただけると幸いです。  
   
   
-[[WorldEditコマンド集]]
+[WorldEditコマンド集](WorldEdit%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E9%9B%86.md)
