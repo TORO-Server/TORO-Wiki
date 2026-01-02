@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/%A5%D7%A5%E9%A5%B0%A5%A4%A5%F3%A1%A7Lift
 title: プラグイン：Lift
 ---
 

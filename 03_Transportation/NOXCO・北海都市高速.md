@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/NOXCO%A1%A6%CB%CC%B3%A4%C5%D4%BB%D4%B9%E2%C2%AE
 title: NOXCO・北海都市高速
 ---
 

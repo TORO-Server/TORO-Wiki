@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TrainCarts
 title: TrainCarts
 ---
 

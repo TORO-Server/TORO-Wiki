@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/Friday-Night
 title: Friday-Night
 ---
 

@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/tomap
 title: tomap
 ---
 

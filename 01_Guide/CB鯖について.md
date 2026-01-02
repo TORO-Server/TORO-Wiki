@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/CB%BB%AA%A4%CB%A4%C4%A4%A4%A4%C6
 title: CB鯖について
 ---
 

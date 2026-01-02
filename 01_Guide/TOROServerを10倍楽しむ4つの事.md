@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TOROServer%A4%F210%C7%DC%B3%DA%A4%B7%A4%E04%A4%C4%A4%CE%BB%F6
 title: TOROServerを10倍楽しむ4つの事
 ---
 

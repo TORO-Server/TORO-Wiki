@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/BAN%B2%F2%BD%FC%BF%BD%C0%C1
 title: BAN解除申請
 ---
 

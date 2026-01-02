@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/Midori%20City
 title: Midori City
 ---
 

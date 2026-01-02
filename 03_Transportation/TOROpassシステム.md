@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TOROpass%A5%B7%A5%B9%A5%C6%A5%E0
 title: TOROpassシステム
 ---
 

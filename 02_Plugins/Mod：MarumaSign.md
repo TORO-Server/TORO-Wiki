@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/Mod%A1%A7MarumaSign
 title: Mod：MarumaSign
 ---
 

@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/%C0%EA%C5%D4%B9%F1%BA%DD%B6%F5%B9%C1%28SIC%29
 title: 占都国際空港(SIC)
 ---
 

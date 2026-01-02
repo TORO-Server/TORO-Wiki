@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/WorldEdit%A5%B3%A5%DE%A5%F3%A5%C9%BD%B8
 title: WorldEditコマンド集
 ---
 

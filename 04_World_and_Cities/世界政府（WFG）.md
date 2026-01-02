@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/%C0%A4%B3%A6%C0%AF%C9%DC%A1%CAWFG%A1%CB
 title: 世界政府（WFG）
 ---
 

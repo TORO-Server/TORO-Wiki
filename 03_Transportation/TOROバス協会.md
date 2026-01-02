@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TORO%A5%D0%A5%B9%B6%A8%B2%F1
 title: TOROバス協会
 ---
 

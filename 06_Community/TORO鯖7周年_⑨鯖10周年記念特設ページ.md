@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TORO%BB%AA7%BC%FE%C7%AF/%AD%A9%BB%AA10%BC%FE%C7%AF%B5%AD%C7%B0%C6%C3%C0%DF%A5%DA%A1%BC%A5%B8
 title: TORO鯖7周年/⑨鯖10周年記念特設ページ
 ---
 

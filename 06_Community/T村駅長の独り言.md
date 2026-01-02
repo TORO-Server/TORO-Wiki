@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/T%C2%BC%B1%D8%C4%B9%A4%CE%C6%C8%A4%EA%B8%C0
 title: T村駅長の独り言
 ---
 

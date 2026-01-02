@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/Discord%A4%CB%A4%C4%A4%A4%A4%C6
 title: Discordについて
 ---
 

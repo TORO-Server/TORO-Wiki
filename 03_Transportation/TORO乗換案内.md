@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TORO%BE%E8%B4%B9%B0%C6%C6%E2
 title: TORO乗換案内
 ---
 

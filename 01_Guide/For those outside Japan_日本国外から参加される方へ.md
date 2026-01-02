@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/For%20those%20outside%20Japan/%C6%FC%CB%DC%B9%F1%B3%B0%A4%AB%A4%E9%BB%B2%B2%C3%A4%B5%A4%EC%A4%EB%CA%FD%A4%D8
 title: For those outside Japan/日本国外から参加される方へ
 ---
 

@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/%A5%A2%A5%A4%A5%C6%A5%E0ID%B0%EC%CD%F7
 title: アイテムID一覧
 ---
 

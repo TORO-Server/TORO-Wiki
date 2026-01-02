@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TORO%20Server%A4%C8%A4%CF%A1%A9
 title: TORO Serverとは？
 ---
 

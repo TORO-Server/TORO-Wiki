@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TORO%BB%AA%C5%B4%C6%BB%BC%D6%CE%BE%BF%DE%B4%D5
 title: TORO鯖鉄道車両図鑑
 ---
 

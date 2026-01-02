@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/TORO%20Music%20Circle
 title: TORO Music Circle
 ---
 

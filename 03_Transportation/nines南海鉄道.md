@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/nines%C6%EE%B3%A4%C5%B4%C6%BB
 title: nines南海鉄道
 ---
 

@@ -1,5 +1,4 @@
 ---
-url: https://seesaawiki.jp/toro_server/d/T%C5%B4%28T%C2%BC%C5%B4%C6%BB%29
 title: T鉄(T村鉄道)
 ---
 
