@@ -50,14 +50,14 @@ TMCではTORO Serverで処罰されるようなこと以外であれば基本的
 ![](../attachments/386696e9903dfdfe8057eaf0b13380d0.gif)
 
 **2023/11/06 - 現在**  
-[![](../attachments/cd6a4b4c5036c7941e4cbfe99ca0fe8b.png)](https://image02.seesaawiki.jp/t/r/toro_server/CCioWZjkHR.png)  
+![image](../attachments/cd6a4b4c5036c7941e4cbfe99ca0fe8b.png)  
 作：Lhcrizm
 
 #### ポスター
 
 ![](../attachments/386696e9903dfdfe8057eaf0b13380d0.gif)
 
-[![](../attachments/5b6444a3dab5d44c9d515bfad2660d1b.png)](https://image01.seesaawiki.jp/t/r/toro_server/yvMe9K_sew.png)  
+![image](../attachments/5b6444a3dab5d44c9d515bfad2660d1b.png)  
 作：Lhcrizm
 
 ### 沿革

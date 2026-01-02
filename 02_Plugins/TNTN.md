@@ -12,7 +12,7 @@ TNTNは、鉄道、駅周辺開発を担う鉄道会社です。和名は、ト�
 
 #### 路線図
 
-[![](../attachments/70d50797707606c1c1cd245508832f18.png)](https://image01.seesaawiki.jp/t/r/toro_server/R7J6OeFtZc.png)
+![image](../attachments/70d50797707606c1c1cd245508832f18.png)
 
 ### TNTNが保有する鉄道
 

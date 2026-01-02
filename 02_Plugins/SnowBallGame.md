@@ -9,7 +9,7 @@ title: SnowBallGame
 
 ### バット
 
-[![](../attachments/58d5dde82bc357377c90c9ef40f1a38c.png)](https://nanjminecraft.wiki.fc2.com/upload_dir/n/nanjminecraft/5f07d6671395794598a2f7bf5d147d20.png)  
+![image](../attachments/58d5dde82bc357377c90c9ef40f1a38c.png)  
   
 /sbg get batにより入手可能。投げられたボールを狙って放つとボールを打ち返すことができる。打球の方向や強さは、ボールとミートカーソルの位置関係で決定される  
 また、打球の強さは弓（バット）の引き絞り具合によっても変わる。ほんの少しだけ引いて上手く打てば、バントをすることも可能。
@@ -25,7 +25,7 @@ title: SnowBallGame
 
 ### グローブ
 
-[![](../attachments/58890669f7ad1e5a86b187320516ab09.png)](https://nanjminecraft.wiki.fc2.com/upload_dir/n/nanjminecraft/610540100edc28b916dbdcf17f70a597.png)  
+![image](../attachments/58890669f7ad1e5a86b187320516ab09.png)  
   
 /sbg get gloveにより入手可能。捕球、投球動作の変更が可能
 

@@ -22,4 +22,4 @@ ArmorStandEditorは、防具建てを思うようにカスタマイズして装�
 
 #### メニューの見方
 
-[![](../attachments/3374085efe4229544b8549b8f9986eca.png)](https://image01.seesaawiki.jp/t/r/toro_server/87cb2420a8d8db50.png)
+![image](../attachments/3374085efe4229544b8549b8f9986eca.png)

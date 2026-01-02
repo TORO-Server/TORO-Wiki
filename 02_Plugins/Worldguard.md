@@ -2,7 +2,7 @@
 title: WorldGuard
 ---
 
-[![](../attachments/cfd02841ca78193f861a2b843a7090ca.png)](https://raw.githubusercontent.com/EngineHub/WorldGuard/master/worldguard-logo.png)  
+![image](../attachments/cfd02841ca78193f861a2b843a7090ca.png)  
   
 TORO Serverでは保護プラグインが導入されており、  
 住民の皆様が、簡単に建造物を保護して、他人のブロック編集から  
@@ -40,7 +40,7 @@ TORO Serverでは保護プラグインが導入されており、
   
 下の画像で言うと、赤ブロックを左クリック、青ブロックを右クリック(逆でも可)することで、範囲を指定することができます。  
   
-[![](../attachments/180f80527d06fb79a95aa4d951cf7215.png)](https://image02.seesaawiki.jp/m/9/maru9/6ce16bcd18f34e14.png)  
+![image](../attachments/180f80527d06fb79a95aa4d951cf7215.png)  
 > //pos1 //pos2 で自分が立っている場所を地点1,2として指定することもできます。
 
   

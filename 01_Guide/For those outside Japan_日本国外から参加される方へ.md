@@ -98,7 +98,7 @@ While you can connect using Minecraft versions other than Java Edition 1.20.4, p
 ![](../attachments/386696e9903dfdfe8057eaf0b13380d0.gif)
 
 **torosaba.net**  
-[![](../attachments/791b38be6f209b48b18b9d5ee6cc7f3e.png)](https://image01.seesaawiki.jp/t/r/toro_server/6LyhBnWDGt.png)
+![image](../attachments/791b38be6f209b48b18b9d5ee6cc7f3e.png)
 
 * **Port number for Bedrock Edition**
 
@@ -106,7 +106,7 @@ While you can connect using Minecraft versions other than Java Edition 1.20.4, p
 
 **20080**  
   
-[![](../attachments/71e1e96958ec3d52d872c2e4b2438186.png)](https://image01.seesaawiki.jp/t/r/toro_server/65pyfRyN9v.png)
+![image](../attachments/71e1e96958ec3d52d872c2e4b2438186.png)
 
 ### What to do if your building is grieved?
 

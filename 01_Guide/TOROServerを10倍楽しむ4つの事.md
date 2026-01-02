@@ -9,7 +9,7 @@ title: TOROServerを10倍楽しむ4つの事
 あいさつは実はすごく大切です。
 あいさつをすることで不審に思われないだけでなくその人の印象もたぶん良くなります。
 「hio」(この鯖の独自のあいさつ)でなくても「hi」や「こん」でも全然オーケー！
-[![](../attachments/0f5258d976bc59bd3b9406d880eb9092.png)](https://image01.seesaawiki.jp/t/r/toro_server/bjrfABMaVU.png)
+![image](../attachments/0f5258d976bc59bd3b9406d880eb9092.png)
 
 ### MarumaSignを導入してみよう
 

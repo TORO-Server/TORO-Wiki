@@ -2,7 +2,7 @@
 title: ChestShop
 ---
 
-[![](../attachments/fed9f4fab1e53d90edf4f734d85f6aed.png)](https://image01.seesaawiki.jp/b/r/byvanillaserver/d03f943be219e0f1.png)   
+![image](../attachments/fed9f4fab1e53d90edf4f734d85f6aed.png)   
 当サーバーでは経済プラグインが導入されており、   
 住民の皆様が簡単にお店を出店できるようになっております。   
 ですが、『作り方が分からない』といった声が聞こえてきましたので、   

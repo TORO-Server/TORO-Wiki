@@ -15,11 +15,11 @@ title: TORO鯖鉄道車両図鑑
 クハ869-モハ868-モハ869-クハ869  
 **各車両の画像**  
 クハ869(Tc)  
-[![](../attachments/59d9eb664d2b28dce14857f59a8a945a.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/fKzdzQEcu0.jpg)  
+![image](../attachments/59d9eb664d2b28dce14857f59a8a945a.jpg)  
 モハ868(M')  
-[![](../attachments/b04bc6d02d00579770947d7b3eead4a5.png)](https://image02.seesaawiki.jp/t/r/toro_server/t3fNQ96bn7.png)  
+![image](../attachments/b04bc6d02d00579770947d7b3eead4a5.png)  
 モハ869(M)  
-[![](../attachments/ca934ccf909d05f13063566cfc6d6d6f.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/5UyIpr47Zu.jpg)
+![image](../attachments/ca934ccf909d05f13063566cfc6d6d6f.jpg)
 
   
 
@@ -32,9 +32,9 @@ title: TORO鯖鉄道車両図鑑
 クモハ860-クモハ861  
 **各車両の画像**  
 クモハ860(M'c)  
-[![](../attachments/469a2d3d8835056abad68f81e08588f4.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/qjM9sf6ugf.jpg)  
+![image](../attachments/469a2d3d8835056abad68f81e08588f4.jpg)  
 クモハ861(Mc)  
-[![](../attachments/8f4ad8c6044082917e7f1e38dba0eb21.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/8xhecCFWBx.jpg)
+![image](../attachments/8f4ad8c6044082917e7f1e38dba0eb21.jpg)
 
   
 
@@ -47,9 +47,9 @@ title: TORO鯖鉄道車両図鑑
 クモハ860-クモハ861  
 **各車両の画像**  
 クモハ860(M'c)  
-[![](../attachments/d7367af52da4d48bc0f385eb1120d804.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/8ILDNdYbHb.jpg)  
+![image](../attachments/d7367af52da4d48bc0f385eb1120d804.jpg)  
 クモハ861(Mc)  
-[![](../attachments/fded0d693dc448cbd72a31d2d11acc91.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/DEDda4asPw.jpg)
+![image](../attachments/fded0d693dc448cbd72a31d2d11acc91.jpg)
 
   
 
@@ -62,11 +62,11 @@ title: TORO鯖鉄道車両図鑑
 クヤ860-(オヤ5001)-モヤ860-クモヤ861  
 **各車両の画像**  
 クヤ860(Tc)  
-[![](../attachments/959a4913d8dcc7b853fac91c1b2fcf27.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/KJpuk4ckTv.jpg)  
+![image](../attachments/959a4913d8dcc7b853fac91c1b2fcf27.jpg)  
 モヤ860(M)  
-[![](../attachments/eb8b67accd52c71758004a69254ce5c9.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/nFvlkT7eoN.jpg)  
+![image](../attachments/eb8b67accd52c71758004a69254ce5c9.jpg)  
 クモヤ861(Mc)  
-[![](../attachments/a7719815909bcf59b15524f45063efcd.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/ppyn5G2xQm.jpg)
+![image](../attachments/a7719815909bcf59b15524f45063efcd.jpg)
 
 ### 気動車
 
@@ -79,11 +79,11 @@ title: TORO鯖鉄道車両図鑑
 2019年に登場した中指重工による客車。  
 **各車両の画像・詳細**  
 オヤ5001　2020年に登場した光オイラン車。  
-[![](../attachments/044d025bd3a7135626cc45ee16349e43.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/dJTJxcF2Ti.jpg)  
+![image](../attachments/044d025bd3a7135626cc45ee16349e43.jpg)  
 マニ5001 2020年に登場した電源車。  
-[![](../attachments/1d6b8b25643ba3611992a9d772c17f55.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/Yaj4s9kggp.jpg)  
+![image](../attachments/1d6b8b25643ba3611992a9d772c17f55.jpg)  
 スニ5901 2019年に登場した荷物車。  
-[![](../attachments/8ce1d2e0e8a30ad4fc41f24606354813.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/Sfit0aOO8S.jpg)
+![image](../attachments/8ce1d2e0e8a30ad4fc41f24606354813.jpg)
 
 ### 貨車
 

@@ -5,7 +5,7 @@ title: 世界政府（WFG）
 ### **世界政府 WFG(World federal government)**
 
 このサーバー内の自治体や国をまとめることで平和と安定を保つために設立された組織。独自の陸軍、海軍、空軍を持ち、世界政府加盟地域に駐屯している。本部をスポーンに置く。旗の色は黒と白である。  
-[![](../attachments/ec454fc9f8e47ac0d32f9754d8dc7c47.png)](https://image02.seesaawiki.jp/t/r/toro_server/0hbvKFoTIG.png)
+![image](../attachments/ec454fc9f8e47ac0d32f9754d8dc7c47.png)
 
 #### 憲章
 
@@ -88,6 +88,6 @@ title: 世界政府（WFG）
 | --- | --- | --- | --- |
 | 豊海運河 |  | AKAGI185 | 豊海運河はすべての船舶が世界政府の管理下の元、安全に航行することができる |
 
-[![](../attachments/916ff584e73225be58f99c7cf9f3fae5.png)](https://image01.seesaawiki.jp/t/r/toro_server/mZJnGCbzA_.png)  
+![image](../attachments/916ff584e73225be58f99c7cf9f3fae5.png)  
   
-[![](../attachments/a3c9caad092c6f7af9e944bcc335b1c0.png)](https://image02.seesaawiki.jp/t/r/toro_server/DvUGxVPgKd.2.png)
+![image](../attachments/a3c9caad092c6f7af9e944bcc335b1c0.png)

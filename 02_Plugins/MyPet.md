@@ -2,7 +2,7 @@
 title: MyPet
 ---
 
-[![](../attachments/3a8e76b4a49910f90b062bd7019d4703.png)](https://image01.seesaawiki.jp/t/r/toro_server/AsJuMYIeoh.png)  
+![image](../attachments/3a8e76b4a49910f90b062bd7019d4703.png)  
 TORO Serverではペットプラグインが導入されており、誰でもペットとしてMOBを飼うことが可能になっております。  
   
 **目次**  

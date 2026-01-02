@@ -4,7 +4,7 @@ title: WorldEdit
 
 *2019年7月27日よりWorldEditは許可制になりました。使用したい場合は運営にお知らせください。*  
   
-[![](../attachments/b3728f9f3046d88325dbc432def925ae.png)](https://raw.githubusercontent.com/EngineHub/WorldEdit/master/worldedit-logo.png)  
+![image](../attachments/b3728f9f3046d88325dbc432def925ae.png)  
   
 TORO Serverでは WorldEdit という建築補助プラグインが導入されており、  
 住民の皆様が、簡単に大規模建築をすることができます。  
@@ -47,7 +47,7 @@ TORO Serverでは WorldEdit という建築補助プラグインが導入され�
 それでは、まず最初に範囲を指定しましょう。  
 指定したい範囲の角と角を、それぞれ木の斧で左クリック、右クリックすることで、直方体状に範囲が指定されます。  
   
-[![](../attachments/180f80527d06fb79a95aa4d951cf7215.png)](https://image02.seesaawiki.jp/m/9/maru9/6ce16bcd18f34e14.png)  
+![image](../attachments/180f80527d06fb79a95aa4d951cf7215.png)  
   
 上の画像で言うと、赤ブロックを左クリック、青ブロックを右クリック(逆でも可)することで、範囲を指定することができます。  
 > コマンドでも指定できます。//pos1と//pos2は立っている地点、//hpos1と//hpos2は見ている(画面中央にある)ブロックの地点を指定します。

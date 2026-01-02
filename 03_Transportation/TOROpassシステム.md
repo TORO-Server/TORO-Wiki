@@ -2,7 +2,7 @@
 title: TOROpassシステム
 ---
 
-[![](../attachments/8d9671155c91356db4f6bdfd2f0f90b9.png)](https://image01.seesaawiki.jp/t/r/toro_server/hDA6EEusNG.png)
+![image](../attachments/8d9671155c91356db4f6bdfd2f0f90b9.png)
 
   
 

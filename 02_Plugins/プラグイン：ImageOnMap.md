@@ -4,7 +4,7 @@ title: プラグイン：ImageOnMap
 
 ### 注意事項
 
-[![](../attachments/c1c7012b7e8c6a0f95800add33b29ff8.png)](https://image02.seesaawiki.jp/t/r/toro_server/JbY9OXoHq3.png)  
+![image](../attachments/c1c7012b7e8c6a0f95800add33b29ff8.png)  
 ImageOnMapは、諸事情により60枚までとなっております。  
 制限なく画像をマイクラ内で使いたい場合は→[MarumaSign](Mod%EF%BC%9AMarumaSign.md)
 
@@ -12,7 +12,7 @@ ImageOnMapは、諸事情により60枚までとなっております。
 
 ImageOnMapは、画像を地図に変換するプラグインです。  
 高速道路の看板や、鉄道駅の電光掲示板等にご利用いただけます。  
-[![](../attachments/daf2c402e32860259b506ded48e3928b.png)](https://image01.seesaawiki.jp/t/r/toro_server/pfiKyBQOLH.png)
+![image](../attachments/daf2c402e32860259b506ded48e3928b.png)
 
 ### 目次
 

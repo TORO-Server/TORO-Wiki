@@ -6,7 +6,7 @@ DiscordとはSkypeなどに代わるゲーマー向けチャットアプリで�
 テキストチャットだけでなくボイスチャットや音楽を聴くと言った事も可能です。  
   
 TORO Serverでは公式のDiscordを開設しています。  
-[![](../attachments/3b8e8b0e485afd6289c22e79fb31f18a.jpg)](https://image02.seesaawiki.jp/t/r/toro_server/SeBXIMRnG7.jpg)  
+![image](../attachments/3b8e8b0e485afd6289c22e79fb31f18a.jpg)  
   
 **13歳未満の人は保護者の同意があってもDiscordへの参加をお断りしています。大変申し訳ございません。**  
   

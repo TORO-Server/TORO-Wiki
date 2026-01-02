@@ -5,7 +5,7 @@ title: T村駅長の独り言
 ### 2024/04/04 金沢行った時の写真が見つかったので載せるだけ
 
 なんかPCのファイル整理してたら出たやつ載せます(いい感じのやつだけ)  
-[![](../attachments/59597379044acac00f543ff2e19bead6.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/CGDpWO_LFm.jpg)[![](../attachments/2963bf6046545fc9a2832f7576f1f6e1.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/1XBQKxoNcY.jpg)[![](../attachments/4561a697f0a2b0b5d5b130d0436c38ed.jpg)](https://image01.seesaawiki.jp/t/r/toro_server/ynDL3SVlRo.jpg)  
+![image](../attachments/59597379044acac00f543ff2e19bead6.jpg)![image](../attachments/2963bf6046545fc9a2832f7576f1f6e1.jpg)![image](../attachments/4561a697f0a2b0b5d5b130d0436c38ed.jpg)  
 ~~※ネタがなかったのでこれで許してください~~
 
 ### 2024/02/24　JR東日本のスタンプラリー行ってきた。

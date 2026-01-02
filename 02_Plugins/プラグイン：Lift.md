@@ -22,7 +22,7 @@ title: プラグイン：Lift
 #### 作り方
 
 文章で説明するのはなかなか難しいので、画像を先に載せておきます。  
-[![](../attachments/fd637c43c046266bc988fce534adabfc.png)](https://image02.seesaawiki.jp/t/r/toro_server/AwcXjvOEAZ.png)
+![image](../attachments/fd637c43c046266bc988fce534adabfc.png)
 
 ##### 最下階の作り方
 

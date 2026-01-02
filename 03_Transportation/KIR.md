@@ -8,7 +8,7 @@ title: KIR
 
 ### 北泉鉄道株式会社
 
-[![](../attachments/02c0cc253ba66ceb4f2c5ec487aeaebf.png)](https://image02.seesaawiki.jp/t/r/toro_server/53dsofVWhi.png)  
+![image](../attachments/02c0cc253ba66ceb4f2c5ec487aeaebf.png)  
 北泉鉄道(きたいずみてつどう)は、武蔵県松牛市に於いて鉄道路線を運営している  
 鉄道事業者で有る。  
 本稿では、主に路線・歴史・車両に附いて記述する。
@@ -25,7 +25,7 @@ title: KIR
 2024年には故・MaeDaIKI28氏の保有する路線を全面買収。亜破壊根ノ-征伐間を廃線、それ以外を高規格化して運転開始した。  
 2025年1月1日、東呂地方鉄道との姉妹鉄道提携を正式に締結。以後全保有車に専用ステッカーを掲出している。↓  
   
-[![](../attachments/e35bf0ebe1c244aca0b532b58f2d0e0c.png)](https://image02.seesaawiki.jp/t/r/toro_server/FIWpfzTWtn.png)
+![image](../attachments/e35bf0ebe1c244aca0b532b58f2d0e0c.png)
 
 ### 保有路線
 

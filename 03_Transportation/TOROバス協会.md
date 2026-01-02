@@ -2,7 +2,7 @@
 title: TOROバス協会
 ---
 
-[![](../attachments/d8834a48a5e4d89501d8d3768c3ff96d.png)](https://image01.seesaawiki.jp/t/r/toro_server/_KmRQPN_gh.png)  
+![image](../attachments/d8834a48a5e4d89501d8d3768c3ff96d.png)  
 現在6事業者が加盟しています。
 
 | 事業者名 | 本社所在地 | 加盟年月 |

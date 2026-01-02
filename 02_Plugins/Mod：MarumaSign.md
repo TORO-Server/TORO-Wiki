@@ -11,7 +11,7 @@ BEでも見えるように画像を使いたかったら→[ImageOnMap](%E3%83%9
 
 MarumaSignは、画像をマイクラ内で表示するModです。  
 AdminのMarumasaUSBさんが作りました。  
-[![](../attachments/309119fd6c0def822196cf18eeee29ef.png)](https://image02.seesaawiki.jp/t/r/toro_server/uuBPId1QzT.png)
+![image](../attachments/309119fd6c0def822196cf18eeee29ef.png)
 
 ### 目次
 

@@ -247,7 +247,7 @@ TORO Serverのサーバーリソースパックに含まれている場合はそ
 
 レールにトロッコを配置してattachmentエディタを持った状態で視点を合わせる。  
 視点を下げるとGUIが出てくるはずです。（ホイールを回せば解除できます）  
-[![](../attachments/53ba1faac9f790ec5f11eff56d5c0584.png)](https://image02.seesaawiki.jp/t/r/toro_server/f7b8554af27611a0.png)  
+![image](../attachments/53ba1faac9f790ec5f11eff56d5c0584.png)  
 まずはApearanceという文字が出た状態でスペースキーを押します。この状態でAキーとDキーを押せば種類が変更できます。
 
 ##### 3-1.先程1-1を行った場合
@@ -264,7 +264,7 @@ TORO Serverのサーバーリソースパックに含まれている場合はそ
 2. Sキーでカボチャのアイコンになっているところでスペースキーを押す。
 3. あとは好きなモデルを選んでクリックする。
 
-[![](../attachments/2fc2647d52bab33b064d551d0ca77a85.png)](https://image02.seesaawiki.jp/t/r/toro_server/32b56b8b2fe8a08b.png)  
+![image](../attachments/2fc2647d52bab33b064d551d0ca77a85.png)  
 これでモデルは設定できました。SHIFTキーで戻りましょう。
 
 ##### 4.当たり判定と向き/位置の調整
