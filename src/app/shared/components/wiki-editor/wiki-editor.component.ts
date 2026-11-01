@@ -3,7 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
-import { AuthService } from '../../../core/auth';
+import { AuthService, AUTH_BASE_URL } from '../../../core/auth';
 import { Icon } from '../../../core/icons';
 
 @Component({
@@ -60,8 +60,8 @@ export class WikiEditorComponent {
     this.error.set(null);
     this.success.set(null);
     try {
-      const res = await fetch(`/api/docs/raw?path=${encodeURIComponent(filePath)}`, {
-        credentials: 'same-origin',
+      const res = await fetch(`${AUTH_BASE_URL}/api/docs/raw?path=${encodeURIComponent(filePath)}`, {
+        credentials: 'include',
       });
       if (!res.ok) {
         throw new Error(`ファイル取得に失敗しました (${res.status})`);
@@ -90,12 +90,12 @@ export class WikiEditorComponent {
     this.success.set(null);
 
     try {
-      const res = await fetch('/api/docs/save', {
+      const res = await fetch(`${AUTH_BASE_URL}/api/docs/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'same-origin',
+        credentials: 'include',
         body: JSON.stringify({
           path: this.path(),
           content: this.content(),

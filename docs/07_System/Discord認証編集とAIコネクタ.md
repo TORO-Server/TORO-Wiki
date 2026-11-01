@@ -31,15 +31,15 @@ Discord 認証によって発行される専用の Bearer トークンを用い�
 
 | AI クライアント | プロトコル / 規格 | エンドポイント | 特徴 |
 | :--- | :--- | :--- | :--- |
-| **Claude** (Desktop / Code) | Model Context Protocol (MCP) | `/api/mcp` | Streamable HTTP / JSON-RPC 2.0。プロンプトから Wiki 検索・記事編集ツールを自動呼び出し |
-| **ChatGPT** (Custom GPTs) | OpenAPI 3.1 Actions | `/api/openapi.json` | Custom GPT の Actions にスキーマを登録し、Bearer 認証で呼び出し |
-| **Gemini** (API / Gems) | Function Calling / REST | `/api/openapi.json` または `/api/docs/*` | REST API または OpenAPI スキーマを Tool 定義として渡して利用 |
+| **Claude** (Desktop / Code) | Model Context Protocol (MCP) | `https://auth.torosaba.net/api/mcp` | Streamable HTTP / JSON-RPC 2.0。プロンプトから Wiki 検索・記事編集ツールを自動呼び出し |
+| **ChatGPT** (Custom GPTs) | OpenAPI 3.1 Actions | `https://auth.torosaba.net/api/openapi.json` | Custom GPT の Actions にスキーマを登録し、Bearer 認証で呼び出し |
+| **Gemini** (API / Gems) | Function Calling / REST | `https://auth.torosaba.net/api/openapi.json` または `/api/docs/*` | REST API または OpenAPI スキーマを Tool 定義として渡して利用 |
 
 ### 提供ツール一覧
-* `search_wiki(query)`: キーワードによる Wiki 記事検索
-* `get_page(slug, path)`: 指定ページの Markdown 原文と git SHA の取得
-* `list_pages(category)`: 全ページ・カテゴリの一覧取得
-* `save_page(path, content, sha, message)`: ページの編集・コミット（Discord ユーザー名で署名）
+* `wiki_search(query)`: キーワードによる Wiki 記事検索
+* `wiki_get_page(path)`: 指定ページの最新 Markdown 原文と git SHA の取得
+* `wiki_list_pages(category)`: 全ページ・カテゴリの一覧取得
+* `wiki_save_page(path, content, sha, message)`: ページの編集・コミット（Discord ユーザー名で署名）
 
 ---
 
@@ -52,7 +52,7 @@ Discord 認証によって発行される専用の Bearer トークンを用い�
 {
   "mcpServers": {
     "toro-wiki": {
-      "url": "https://wiki.torosaba.net/api/mcp",
+      "url": "https://auth.torosaba.net/api/mcp",
       "headers": {
         "Authorization": "Bearer <YOUR_DISCORD_TOKEN>"
       }
@@ -63,5 +63,5 @@ Discord 認証によって発行される専用の Bearer トークンを用い�
 
 ### ChatGPT (Custom GPTs)
 1. Custom GPT の設定画面で「Actions」を追加します。
-2. 「Import from URL」に `https://wiki.torosaba.net/api/openapi.json` を入力します。
+2. 「Import from URL」に `https://auth.torosaba.net/api/openapi.json` を入力します。
 3. Authentication を「API Key」->「Bearer」に設定し、Bearer トークンを入力します。

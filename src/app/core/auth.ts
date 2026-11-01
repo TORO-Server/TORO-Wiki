@@ -34,6 +34,8 @@ export interface ConnectorInfo {
   };
 }
 
+export const AUTH_BASE_URL = 'https://auth.torosaba.net';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -55,7 +57,9 @@ export class AuthService {
     if (!this.browser) return null;
     this.loading.set(true);
     try {
-      const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      const res = await fetch(`${AUTH_BASE_URL}/api/auth/me`, {
+        credentials: 'include',
+      });
       if (res.ok) {
         const data = (await res.json()) as { authenticated: boolean; user: AuthUser | null };
         if (data.authenticated && data.user) {
@@ -77,14 +81,17 @@ export class AuthService {
 
   login(returnTo?: string) {
     if (!this.browser) return;
-    const target = returnTo || window.location.pathname + window.location.search;
-    window.location.href = `/api/auth/login?returnTo=${encodeURIComponent(target)}`;
+    const target = returnTo || window.location.href;
+    window.location.href = `${AUTH_BASE_URL}/api/auth/login?redirect=${encodeURIComponent(target)}`;
   }
 
   async logout(): Promise<void> {
     if (!this.browser) return;
     try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+      await fetch(`${AUTH_BASE_URL}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
     } catch {
       // ignore
     }
@@ -95,7 +102,10 @@ export class AuthService {
   async getAiConnectors(): Promise<ConnectorInfo | null> {
     if (!this.browser) return null;
     try {
-      const res = await fetch('/api/auth/token', { credentials: 'same-origin' });
+      const res = await fetch(`${AUTH_BASE_URL}/api/auth/token`, {
+        method: 'POST',
+        credentials: 'include',
+      });
       if (res.ok) {
         return (await res.json()) as ConnectorInfo;
       }
