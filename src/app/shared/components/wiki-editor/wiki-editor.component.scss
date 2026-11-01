@@ -1,0 +1,309 @@
+.editor-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.editor-window {
+  width: min(1200px, 96vw);
+  height: min(850px, 92vh);
+  background: #ece9d8;
+  border: 2px solid #0055ea;
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 1px 1px #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Tahoma', 'MS PGothic', sans-serif;
+  color: #000;
+}
+
+.window-titlebar {
+  background: linear-gradient(180deg, #0a246a 0%, #a6caf0 10%, #0055ea 30%, #0055ea 70%, #082878 100%);
+  color: #fff;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  font-weight: bold;
+  font-size: 13px;
+  text-shadow: 1px 1px 1px #000;
+
+  .window-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-close {
+    width: 21px;
+    height: 21px;
+    background: linear-gradient(180deg, #e06050 0%, #c03020 100%);
+    border: 1px solid #fff;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 1px 1px rgba(255, 255, 255, 0.5);
+
+    &:hover {
+      background: linear-gradient(180deg, #ff7060 0%, #d83828 100%);
+    }
+
+    &:active {
+      box-shadow: inset 1px 1px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+.window-toolbar {
+  background: #f1efe2;
+  border-bottom: 1px solid #d0ccb8;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+
+    .tab-btn {
+      padding: 4px 12px;
+      background: #ece9d8;
+      border: 1px solid #7f9db9;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+
+      &:hover {
+        background: #fff;
+      }
+
+      &.active {
+        background: #0055ea;
+        color: #fff;
+        border-color: #082878;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .user-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+
+    .auth-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      padding: 2px 8px;
+      border: 1px solid #7f9db9;
+      border-radius: 12px;
+
+      .avatar {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+      }
+    }
+
+    .auth-warning {
+      color: #b00;
+      font-weight: bold;
+    }
+  }
+}
+
+.window-body {
+  flex: 1;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+
+  &.loading {
+    background: #f9f9f9;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #444;
+  }
+
+  .workspace {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .pane {
+      flex: 1;
+      height: 100%;
+      overflow: auto;
+      box-sizing: border-box;
+
+      &.edit-pane {
+        border-right: 2px solid #ece9d8;
+
+        .markdown-input {
+          width: 100%;
+          height: 100%;
+          border: none;
+          padding: 12px;
+          font-family: 'Consolas', 'Courier New', monospace;
+          font-size: 13px;
+          line-height: 1.5;
+          resize: none;
+          outline: none;
+          box-sizing: border-box;
+          background: #fafafa;
+        }
+      }
+
+      &.preview-pane {
+        padding: 16px;
+        background: #fff;
+
+        .preview-content {
+          font-size: 14px;
+          line-height: 1.6;
+        }
+      }
+    }
+
+    &[data-mode='edit'] .edit-pane {
+      flex: 1;
+      border-right: none;
+    }
+
+    &[data-mode='preview'] .preview-pane {
+      flex: 1;
+    }
+  }
+}
+
+.banner {
+  padding: 6px 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.error-banner {
+    background: #ffd6d6;
+    color: #a00;
+    border-top: 1px solid #e09999;
+  }
+
+  &.success-banner {
+    background: #d6ffd6;
+    color: #070;
+    border-top: 1px solid #99e099;
+  }
+}
+
+.window-footer {
+  background: #ece9d8;
+  border-top: 1px solid #fff;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .commit-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+
+    label {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .commit-msg-input {
+      flex: 1;
+      padding: 4px 8px;
+      border: 1px solid #7f9db9;
+      border-radius: 2px;
+      font-size: 12px;
+      background: #fff;
+    }
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    .path-hint {
+      margin-right: auto;
+      font-size: 11px;
+      color: #666;
+      font-family: monospace;
+    }
+  }
+}
+
+.xp-btn {
+  padding: 4px 14px;
+  background: linear-gradient(180deg, #fff 0%, #ece9d8 100%);
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: inset 1px 1px #fff;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(180deg, #eef 0%, #d8e0f0 100%);
+    border-color: #0055ea;
+  }
+
+  &:active:not(:disabled) {
+    background: #d8d4c0;
+    box-shadow: inset 1px 1px #888;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.xp-btn-primary {
+    font-weight: bold;
+    border-color: #0055ea;
+    background: linear-gradient(180deg, #5ba4ff 0%, #1e62d0 100%);
+    color: #fff;
+    text-shadow: 1px 1px 1px #003;
+    box-shadow: inset 1px 1px rgba(255, 255, 255, 0.4);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(180deg, #70b4ff 0%, #2874e8 100%);
+    }
+  }
+}

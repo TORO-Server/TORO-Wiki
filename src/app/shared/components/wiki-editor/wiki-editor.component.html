@@ -1,0 +1,132 @@
+@if (isOpen()) {
+  <div class="editor-backdrop" (click)="onClose()">
+    <div class="editor-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+      <!-- Windows XP スタイル タイトルバー -->
+      <div class="window-titlebar">
+        <div class="window-title" id="editor-title">
+          <app-icon name="edit" />
+          <span>ページを編集 - {{ title() || path() }}</span>
+        </div>
+        <div class="window-controls">
+          <button type="button" class="btn-close" (click)="onClose()" aria-label="閉じる">✕</button>
+        </div>
+      </div>
+
+      <!-- ツールバー / タブ -->
+      <div class="window-toolbar">
+        <div class="tabs">
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="activeTab() === 'split'"
+            (click)="activeTab.set('split')"
+          >
+            2画面 (編集 + プレビュー)
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="activeTab() === 'edit'"
+            (click)="activeTab.set('edit')"
+          >
+            Markdown 編集
+          </button>
+          <button
+            type="button"
+            class="tab-btn"
+            [class.active]="activeTab() === 'preview'"
+            (click)="activeTab.set('preview')"
+          >
+            プレビュー
+          </button>
+        </div>
+
+        <div class="user-status">
+          @if (auth.user(); as u) {
+            <span class="auth-pill">
+              <img [src]="u.avatar_url" alt="" class="avatar" />
+              <span>{{ u.global_name || u.username }} として編集</span>
+            </span>
+          } @else {
+            <span class="auth-warning">未ログイン (保存できません)</span>
+            <button type="button" class="xp-btn" (click)="auth.login()">Discord ログイン</button>
+          }
+        </div>
+      </div>
+
+      <!-- メイン編集エリア -->
+      <div class="window-body" [class.loading]="loading()">
+        @if (loading()) {
+          <div class="loading-overlay">
+            <p>GitHub から最新の Markdown を読み込んでいます…</p>
+          </div>
+        } @else {
+          <div class="workspace" [attr.data-mode]="activeTab()">
+            @if (activeTab() === 'edit' || activeTab() === 'split') {
+              <div class="pane edit-pane">
+                <textarea
+                  class="markdown-input"
+                  [ngModel]="content()"
+                  (ngModelChange)="content.set($event)"
+                  placeholder="Markdown を入力してください…"
+                  spellcheck="false"
+                ></textarea>
+              </div>
+            }
+
+            @if (activeTab() === 'preview' || activeTab() === 'split') {
+              <div class="pane preview-pane">
+                <div class="prose preview-content" [innerHTML]="previewHtml()"></div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- 通知バナー -->
+      @if (error()) {
+        <div class="banner error-banner">
+          <app-icon name="close" />
+          <span>{{ error() }}</span>
+        </div>
+      }
+      @if (success()) {
+        <div class="banner success-banner">
+          <span>{{ success() }}</span>
+        </div>
+      }
+
+      <!-- コミットメッセージ & フッターアクション -->
+      <div class="window-footer">
+        <div class="commit-input-group">
+          <label for="commit-msg">コミットメッセージ:</label>
+          <input
+            id="commit-msg"
+            type="text"
+            class="commit-msg-input"
+            [ngModel]="message()"
+            (ngModelChange)="message.set($event)"
+            placeholder="変更内容の要約 (例: ○○の追記)"
+          />
+        </div>
+
+        <div class="footer-actions">
+          <span class="path-hint">{{ path() }}</span>
+          <button type="button" class="xp-btn" (click)="onClose()" [disabled]="saving()">キャンセル</button>
+          <button
+            type="button"
+            class="xp-btn xp-btn-primary"
+            (click)="save()"
+            [disabled]="loading() || saving() || !auth.user()?.can_edit"
+          >
+            @if (saving()) {
+              <span>保存中…</span>
+            } @else {
+              <span>保存してコミット</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

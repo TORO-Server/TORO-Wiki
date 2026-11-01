@@ -27,7 +27,14 @@
   list-style: none;
 }
 
-.tasks a {
+.tasks a,
+.tasks .task-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -263,7 +270,15 @@ h1 {
 
   // 短いリンクは、左右に余白を付けて 40px にする
   .addr a,
-  .mobile-actions a {
+  .mobile-actions a,
+.mobile-actions .link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline;
     min-width: 0;
     padding-inline: 8px;
   }

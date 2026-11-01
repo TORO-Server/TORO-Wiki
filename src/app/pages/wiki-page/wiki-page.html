@@ -5,7 +5,12 @@
         <h2>ページの操作</h2>
         <div class="pane-body">
           <ul class="tasks">
-            <li><a [href]="editUrl()" target="_blank" rel="noopener"><app-icon name="edit" /> このページを編集</a></li>
+            <li>
+              <button type="button" class="task-btn" (click)="openEditor()">
+                <app-icon name="edit" /> このページを編集
+              </button>
+            </li>
+            <li><a [href]="editUrl()" target="_blank" rel="noopener"><app-icon name="external" /> GitHub で編集</a></li>
             <li><a [href]="historyUrl()" target="_blank" rel="noopener"><app-icon name="history" /> 変更の履歴</a></li>
             @if (p.seesaa) {
               <li><a [href]="p.seesaa" target="_blank" rel="noopener"><app-icon name="external" /> 旧 Wiki (seesaa) で見る</a></li>
@@ -71,7 +76,7 @@
             ・ {{ p.author }}
           }
           <span class="mobile-actions">
-            <a [href]="editUrl()" target="_blank" rel="noopener">編集</a>
+            <button type="button" class="link-btn" (click)="openEditor()">編集</button>
             <a [href]="historyUrl()" target="_blank" rel="noopener">履歴</a>
             @if (p.seesaa) {
               <a [href]="p.seesaa" target="_blank" rel="noopener">旧 Wiki</a>
@@ -114,6 +119,14 @@
           }
         </nav>
       </article>
+
+      <app-wiki-editor
+        [isOpen]="isEditorOpen()"
+        [path]="p.source"
+        [title]="p.title"
+        (close)="closeEditor()"
+        (saved)="onEditorSaved()"
+      />
     } @else if (page.status() === 'error') {
       <article class="sheet doc missing">
         <h1>ページを読み込めませんでした</h1>

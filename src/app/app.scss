@@ -140,6 +140,152 @@
   }
 }
 
+
+.user-menu-wrap {
+  position: relative;
+}
+
+.tb-auth-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 3px;
+  background: #5865F2;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+  white-space: nowrap;
+
+  &:hover {
+    background: #4752c4;
+  }
+}
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #3c8cf7, #1659d6);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+
+  &:hover {
+    background: linear-gradient(180deg, #5aa0ff, #2a6ee0);
+  }
+
+  .tb-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  .user-name {
+    font-size: 12px;
+    font-weight: bold;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  width: 200px;
+  background: #ece9d8;
+  border: 2px solid #0055ea;
+  border-radius: 4px;
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  z-index: 999;
+  font-family: 'Tahoma', sans-serif;
+  color: #000;
+
+  .user-info {
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+
+    .role-badge {
+      font-size: 10px;
+      color: #0055ea;
+      font-weight: bold;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #d0ccb8;
+    margin: 4px 0;
+  }
+
+  .menu-item {
+    width: 100%;
+    padding: 6px 8px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 2px;
+    color: #000;
+
+    &:hover {
+      background: #0055ea;
+      color: #fff;
+    }
+
+    &.danger {
+      color: #b00;
+
+      &:hover {
+        background: #c03020;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.mobile-link {
+  width: 100%;
+  padding: 10px 4px;
+  color: #fff;
+  background: none;
+  border: none;
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+
+  &.auth-highlight {
+    color: #ffd700;
+    font-weight: bold;
+  }
+}
+
+.mobile-user {
+  padding: 8px 4px 2px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
 .menu-btn {
   display: none;
 }

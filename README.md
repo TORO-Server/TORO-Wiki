@@ -29,7 +29,21 @@ https://wiki.torosaba.net/
   このリポジトリで編集すると、最終更新日と更新者は git の履歴から自動で付きます。
 - Markdown の中に HTML (`<table>` など) も書けます。`<script>` などはビルド時に取り除かれます。
 
-サイト上の各ページの「このページを編集」から、GitHub で直接変更を提案できます。
+サイト上の各ページの「このページを編集」から、Discord でログインして直接ブラウザ上で編集するか、GitHub で直接変更を提案できます。
+
+## Discord ログイン & ブラウザ編集 (Cloudflare 連携)
+
+Cloudflare Pages Functions / Workers と Discord OAuth2 を組み合わせ、ブラウザ上での直接編集に対応しています。
+- **認証**: Discord アカウントでログインし、TORO Server 公式 Discord サーバーの参加状態と権限を検証します。
+- **編集 & 保存**: ブラウザ上の Windows XP 風エディタで編集・プレビューし、GitHub REST API 経由でリポジトリに自動コミットされます。コミット履歴の作者には Discord ユーザー名が記録されます。
+- 設定方法は [`.env.example`](.env.example) および [`docs/07_System/Discord認証編集とAIコネクタ.md`](docs/07_System/Discord認証編集とAIコネクタ.md) を参照してください。
+
+## AI コネクタ (Claude / ChatGPT / Gemini)
+
+Discord 認証に紐づく Bearer トークンを用いて、各種生成 AI アシスタントと Wiki を直結できます。
+- **Claude (Desktop / Code)**: Model Context Protocol (MCP) エンドポイント (`/api/mcp`) により、検索・参照・編集ツールをネイティブ実行できます。
+- **ChatGPT (Custom GPTs)**: OpenAPI 3.1 仕様書 (`/api/openapi.json`) を Actions にインポートして利用できます。
+- **Gemini**: REST API / Function Calling で呼び出し可能です。
 
 ## 開発
 
@@ -41,7 +55,7 @@ npm run build      # dist/toro-website/browser に静的サイトを書き出す
 
 - `scripts/build-content.mjs` — `docs/` の Markdown を HTML にして、`public/content/` (ページの JSON・全文検索の索引)、`feed.xml`、`sitemap.xml` を作ります。`npm start` / `npm run build` の前に自動で動きます。
 - ページはすべてプリレンダーするので、JavaScript が動かなくても読めます。
-- `main` に push すると GitHub Actions が GitHub Pages に公開します。
+- `main` に push すると GitHub Actions が公開します。
 
 ## PWA (ホーム画面に追加・オフライン)
 

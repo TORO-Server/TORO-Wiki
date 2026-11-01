@@ -1,0 +1,160 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="close.emit()">
+    <div class="modal-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <!-- タイトルバー -->
+      <div class="window-titlebar">
+        <div class="window-title" id="modal-title">
+          <app-icon name="network" />
+          <span>AI コネクタ設定 (Claude / ChatGPT / Gemini)</span>
+        </div>
+        <div class="window-controls">
+          <button type="button" class="btn-close" (click)="close.emit()" aria-label="閉じる">✕</button>
+        </div>
+      </div>
+
+      <!-- タブ -->
+      <div class="window-tabs">
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'claude'"
+          (click)="activeTab.set('claude')"
+        >
+          Claude (MCP)
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'chatgpt'"
+          (click)="activeTab.set('chatgpt')"
+        >
+          ChatGPT (Actions)
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'gemini'"
+          (click)="activeTab.set('gemini')"
+        >
+          Gemini / API
+        </button>
+      </div>
+
+      <!-- 本文 -->
+      <div class="window-body">
+        @if (!auth.user()) {
+          <div class="auth-required">
+            <p><strong>Discord ログインが必要です</strong></p>
+            <p>AI コネクタを利用するには、あなたの Discord アカウントで認証し、権限を付与された専用トークンを発行する必要があります。</p>
+            <button type="button" class="xp-btn xp-btn-primary" (click)="auth.login()">Discord でログインする</button>
+          </div>
+        } @else if (loading()) {
+          <div class="loading-box">トークンを生成中…</div>
+        } @else if (info(); as data) {
+          <!-- 共通トークン表示 -->
+          <section class="token-section">
+            <div class="token-header">
+              <span class="token-label">あなたの Discord 連携 Bearer トークン:</span>
+              <span class="token-exp">有効期限: {{ data.expires_at | slice:0:10 }}</span>
+            </div>
+            <div class="token-display">
+              <input type="password" [value]="data.token" readonly class="token-input" />
+              <button
+                type="button"
+                class="xp-btn"
+                (click)="copyText(data.token, 'token')"
+              >
+                {{ copiedField() === 'token' ? 'コピーしました！' : 'トークンをコピー' }}
+              </button>
+            </div>
+          </section>
+
+          <!-- Claude タブ -->
+          @if (activeTab() === 'claude') {
+            <section class="tab-pane">
+              <h3>Claude Desktop / Claude Code 設定 (MCP サーバー)</h3>
+              <p class="desc">
+                Anthropic の <strong>Model Context Protocol (MCP)</strong> に対応しています。
+                <code>claude_desktop_config.json</code> に以下の設定を追加すると、Claude が Wiki の検索・参照・編集を実行できるようになります。
+              </p>
+
+              <div class="code-box">
+                <div class="code-header">
+                  <span>claude_desktop_config.json</span>
+                  <button type="button" class="xp-btn" (click)="copyText(claudeConfigJson, 'claude')">
+                    {{ copiedField() === 'claude' ? 'コピー完了！' : '設定をコピー' }}
+                  </button>
+                </div>
+                <pre><code>{{ claudeConfigJson }}</code></pre>
+              </div>
+
+              <div class="hint-box">
+                <strong>利用可能なツール:</strong>
+                <ul>
+                  <li><code>search_wiki</code>: キーワードで Wiki 記事を検索</li>
+                  <li><code>get_page</code>: 指定ページの最新 Markdown 原文と SHA を取得</li>
+                  <li><code>list_pages</code>: カテゴリ別ページ一覧を取得</li>
+                  <li><code>save_page</code>: ページを編集して GitHub へコミット（Discord ユーザーとして署名）</li>
+                </ul>
+              </div>
+            </section>
+          }
+
+          <!-- ChatGPT タブ -->
+          @if (activeTab() === 'chatgpt') {
+            <section class="tab-pane">
+              <h3>ChatGPT Custom GPTs 設定 (Actions)</h3>
+              <p class="desc">
+                OpenAI の Custom GPTs で「Create new action」を選択し、以下のスキーマ URL をインポートしてください。
+              </p>
+
+              <div class="field-row">
+                <label>OpenAPI Schema URL:</label>
+                <div class="input-with-btn">
+                  <input type="text" [value]="data.connectors.chatgpt.schema_url" readonly class="code-input" />
+                  <button type="button" class="xp-btn" (click)="copyText(data.connectors.chatgpt.schema_url, 'schema')">
+                    {{ copiedField() === 'schema' ? 'コピー完了！' : 'URL をコピー' }}
+                  </button>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <label>認証設定 (Authentication):</label>
+                <div class="auth-steps">
+                  <ol>
+                    <li>Authentication Type を <strong>API Key</strong> に設定</li>
+                    <li>Auth Type を <strong>Bearer</strong> に設定</li>
+                    <li>API Key 欄に上記でコピーした「Bearer トークン」を貼り付け</li>
+                  </ol>
+                </div>
+              </div>
+            </section>
+          }
+
+          <!-- Gemini タブ -->
+          @if (activeTab() === 'gemini') {
+            <section class="tab-pane">
+              <h3>Gemini API / Python / curl 設定</h3>
+              <p class="desc">
+                Gemini API の Tool（Function Calling）や各種スクリプトから直接 Wiki API を呼び出すことができます。
+              </p>
+
+              <div class="code-box">
+                <div class="code-header">
+                  <span>curl 実行例 (ページ取得)</span>
+                </div>
+                <pre><code>curl -H "Authorization: Bearer {{ data.token }}" \
+     "{{ data.connectors.chatgpt.schema_url | slice:0:-18 }}/api/docs/raw?slug=ルール"</code></pre>
+              </div>
+            </section>
+          }
+        }
+      </div>
+
+      <!-- フッター -->
+      <div class="window-footer">
+        <button type="button" class="xp-btn" (click)="close.emit()">閉じる</button>
+      </div>
+    </div>
+  </div>
+}

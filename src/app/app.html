@@ -34,6 +34,53 @@
           <button type="submit" aria-label="検索"><app-icon name="search" /></button>
         </form>
 
+        <!-- AI コネクタ ボタン -->
+        <button
+          class="tb-btn ai-btn"
+          type="button"
+          (click)="openAiModal()"
+          aria-label="AI コネクタ (Claude / ChatGPT / Gemini)"
+          title="AI コネクタ (Claude / ChatGPT / Gemini)"
+        >
+          <app-icon name="network" />
+        </button>
+
+        <!-- Discord 認証ステータス / ログインボタン -->
+        <div class="user-menu-wrap">
+          @if (auth.user(); as u) {
+            <button
+              class="user-btn"
+              type="button"
+              (click)="userMenuOpen.set(!userMenuOpen())"
+              [attr.aria-expanded]="userMenuOpen()"
+              aria-label="ユーザーメニュー"
+            >
+              <img [src]="u.avatar_url" alt="" class="tb-avatar" />
+              <span class="user-name">{{ u.global_name || u.username }}</span>
+            </button>
+
+            @if (userMenuOpen()) {
+              <div class="user-dropdown xp-menu" role="menu">
+                <div class="menu-item user-info">
+                  <strong>{{ u.global_name || u.username }}</strong>
+                  <span class="role-badge">{{ u.can_edit ? '編集可能' : '閲覧のみ' }}</span>
+                </div>
+                <hr />
+                <button type="button" class="menu-item" (click)="openAiModal()">
+                  <app-icon name="network" /> AI コネクタ設定
+                </button>
+                <button type="button" class="menu-item danger" (click)="auth.logout()">
+                  <app-icon name="logout" /> ログアウト
+                </button>
+              </div>
+            }
+          } @else {
+            <button class="tb-auth-btn" type="button" (click)="auth.login()">
+              Discord ログイン
+            </button>
+          }
+        </div>
+
         <button class="tb-btn" type="button" (click)="toggleTheme()" [attr.aria-label]="dark() ? 'ライトモードにする' : 'ダークモードにする'">
           <app-icon [name]="dark() ? 'sun' : 'moon'" />
         </button>
@@ -56,6 +103,14 @@
           <a routerLink="/map">3D マップ</a>
           <a [routerLink]="['/wiki', 'ルール']">ルール</a>
           <a [href]="site.discord" target="_blank" rel="noopener">Discord</a>
+          <hr />
+          <button type="button" class="mobile-link" (click)="openAiModal()">AI コネクタ (Claude/ChatGPT/Gemini)</button>
+          @if (auth.user(); as u) {
+            <span class="mobile-user">{{ u.global_name || u.username }} でログイン中</span>
+            <button type="button" class="mobile-link" (click)="auth.logout()">ログアウト</button>
+          } @else {
+            <button type="button" class="mobile-link auth-highlight" (click)="auth.login()">Discord でログイン</button>
+          }
         </nav>
       }
     </header>
@@ -77,3 +132,5 @@
     </footer>
   </div>
 </div>
+
+<app-ai-connector-modal [isOpen]="aiModalOpen()" (close)="aiModalOpen.set(false)" />

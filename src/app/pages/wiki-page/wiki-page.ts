@@ -1,23 +1,26 @@
-import { Component, ElementRef, PLATFORM_ID, afterRenderEffect, computed, effect, inject, input, resource, viewChild } from '@angular/core';
+import { Component, ElementRef, PLATFORM_ID, afterRenderEffect, computed, effect, inject, input, resource, signal, viewChild } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth';
 import { ContentService } from '../../core/content';
 import { JaDatePipe } from '../../core/format';
 import { Icon } from '../../core/icons';
 import { Seo } from '../../core/seo';
 import { SITE } from '../../core/site';
 import { CATEGORY_ICON } from '../../shared/categories';
+import { WikiEditorComponent } from '../../shared/components/wiki-editor/wiki-editor.component';
 
 @Component({
   selector: 'app-wiki-page',
-  imports: [RouterLink, Icon, JaDatePipe],
+  imports: [RouterLink, Icon, JaDatePipe, WikiEditorComponent],
   templateUrl: './wiki-page.html',
   styleUrl: './wiki-page.scss',
 })
 export class WikiPageView {
   readonly slug = input.required<string>();
 
+  protected readonly auth = inject(AuthService);
   private readonly content = inject(ContentService);
   private readonly router = inject(Router);
   private readonly sanitizer = inject(DomSanitizer);
@@ -27,6 +30,7 @@ export class WikiPageView {
 
   protected readonly site = SITE;
   protected readonly icon = CATEGORY_ICON;
+  protected readonly isEditorOpen = signal<boolean>(false);
 
   protected readonly index = resource({ loader: () => this.content.index() });
   protected readonly page = resource({
@@ -93,6 +97,18 @@ export class WikiPageView {
       const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
       el?.scrollIntoView();
     });
+  }
+
+  protected openEditor() {
+    this.isEditorOpen.set(true);
+  }
+
+  protected closeEditor() {
+    this.isEditorOpen.set(false);
+  }
+
+  protected onEditorSaved() {
+    this.page.reload();
   }
 
   /** 本文中のリンクを、ページを読み直さずに開く */

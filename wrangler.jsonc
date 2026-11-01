@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "toro-wiki-site",
+  "pages_build_output_dir": "dist/toro-website/browser",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "GITHUB_OWNER": "TORO-Server",
+    "GITHUB_REPO": "TORO-Wiki-Site",
+    "GITHUB_BRANCH": "main"
+  }
+}
