@@ -10,7 +10,7 @@
     "prebuild": "npm run content",
     "build": "ng build",
     "postbuild": "node scripts/postbuild.mjs",
-    "test": "node --test \"functions/api/lib/*.test.ts\""
+    "test": "node --test \"functions/api/lib/*.test.ts\" \"src/app/core/*.spec.ts\""
   },
   "private": true,
   "packageManager": "npm@11.19.1",
