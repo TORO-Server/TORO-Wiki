@@ -65,6 +65,19 @@ h1 {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+
+  .edit-guide-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    color: #0b4fc7;
+    border-color: #3c7fb1;
+
+    &:hover {
+      background: #eef4ff;
+    }
+  }
 }
 
 // XP の通知の吹き出し
@@ -318,7 +331,6 @@ h1 {
 }
 
 @media (max-width: 760px) {
-  // 1fr だと、一覧の表 (折り返さない) の幅まで列が広がって、ウィンドウが画面からはみ出す
   .explorer-body {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -343,7 +355,6 @@ h1 {
     }
   }
 
-  // ページ名は折り返して、表が画面に収まるようにする (収まらないときは表の中で横に動かす)
   .details td:first-child {
     white-space: normal;
   }

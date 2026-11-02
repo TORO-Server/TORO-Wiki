@@ -1,0 +1,81 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-window xp-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+      <div class="xp-titlebar">
+        <div class="titlebar-title" id="guide-title">
+          <app-icon name="book" />
+          <span>TORO Wiki 記事編集ガイド</span>
+        </div>
+        <button type="button" class="btn-close" (click)="onClose()" aria-label="閉じる">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="lead">
+          TORO Server Wiki は、誰でも情報を追加・編集して改善に参加できます。<br />
+          編集方法は<strong>「Discord ログインによるWeb編集」</strong>と<strong>「GitHub での編集」</strong>の2通りがあります。
+        </p>
+
+        <div class="methods-grid">
+          <!-- 方法1: Web上で直接編集 -->
+          <div class="method-card primary">
+            <div class="card-header">
+              <span class="badge recommend">おすすめ</span>
+              <h3>1. ブラウザ上で直接編集 (Discord 連携)</h3>
+            </div>
+            <p class="desc">
+              Discord アカウントでログインするだけで、ブラウザ上の専用エディタから Markdown を直接編集・即座に保存できます。
+            </p>
+            <ul class="steps">
+              <li>右上の<strong>「Discord ログイン」</strong>または記事の<strong>「このページをWeb編集」</strong>を押す</li>
+              <li>Discord 認証を許可する (TORO Server 公式 Discord の参加権限を自動確認)</li>
+              <li>Windows XP 風エディタでプレビューを見ながら編集し、<strong>「保存してコミット」</strong>を押す</li>
+            </ul>
+            <div class="card-action">
+              @if (auth.user()) {
+                <span class="status-ok">✔ {{ auth.user()?.global_name || auth.user()?.username }} でログイン中</span>
+              } @else {
+                <button type="button" class="xp-btn xp-btn-primary" (click)="auth.login(); onClose()">
+                  Discord でログインする
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- 方法2: GitHub で編集 -->
+          <div class="method-card">
+            <div class="card-header">
+              <span class="badge">開発者・PR向け</span>
+              <h3>2. GitHub から編集</h3>
+            </div>
+            <p class="desc">
+              GitHub アカウントをお持ちの方は、リポジトリの Markdown ファイルを直接編集して Pull Request (変更提案) を作成できます。
+            </p>
+            <ul class="steps">
+              <li>各記事の上部やサイドバーにある<strong>「GitHub で編集」</strong>リンクをクリック</li>
+              <li>GitHub 上の鉛筆アイコンで Markdown を編集</li>
+              <li>変更内容の要約を入力し、Pull Request を送信 (管理者が確認後反映)</li>
+            </ul>
+            <div class="card-action">
+              <a [href]="site.repo" target="_blank" rel="noopener" class="xp-btn">
+                <app-icon name="external" /> GitHub リポジトリを開く
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="rules-box">
+          <h4>📝 編集のルール・ヒント</h4>
+          <ul>
+            <li>記事はすべて Markdown 形式です。見出し (<code>##</code>) やリスト (<code>-</code>) が使えます。</li>
+            <li>他の Wiki 記事へのリンクは <code>[記事名](../01_Guide/ルール.md)</code> のように記述します。</li>
+            <li>荒らし行為や規約違反となる文章の投稿は禁止されています。すべての編集履歴は記録されます。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="xp-btn" (click)="onClose()">閉じる</button>
+      </div>
+    </div>
+  </div>
+}

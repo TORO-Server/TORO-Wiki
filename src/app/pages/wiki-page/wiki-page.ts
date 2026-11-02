@@ -10,10 +10,11 @@ import { Seo } from '../../core/seo';
 import { SITE } from '../../core/site';
 import { CATEGORY_ICON } from '../../shared/categories';
 import { WikiEditorComponent } from '../../shared/components/wiki-editor/wiki-editor.component';
+import { EditGuideModalComponent } from '../../shared/components/edit-guide-modal/edit-guide-modal.component';
 
 @Component({
   selector: 'app-wiki-page',
-  imports: [RouterLink, Icon, JaDatePipe, WikiEditorComponent],
+  imports: [RouterLink, Icon, JaDatePipe, WikiEditorComponent, EditGuideModalComponent],
   templateUrl: './wiki-page.html',
   styleUrl: './wiki-page.scss',
 })
@@ -31,6 +32,8 @@ export class WikiPageView {
   protected readonly site = SITE;
   protected readonly icon = CATEGORY_ICON;
   protected readonly isEditorOpen = signal<boolean>(false);
+  protected readonly isGuideOpen = signal<boolean>(false);
+  protected readonly mobileTocOpen = signal<boolean>(false);
 
   protected readonly index = resource({ loader: () => this.content.index() });
   protected readonly page = resource({
@@ -80,13 +83,26 @@ export class WikiPageView {
 
   constructor() {
     effect(() => {
-      const slug = this.slug();
+      const rawSlug = this.slug();
+      let decodedSlug = rawSlug;
+      try {
+        decodedSlug = decodeURIComponent(rawSlug);
+      } catch {
+        // ignore
+      }
       const p = this.current();
-      const summary = this.idx()?.pages.find((x) => x.slug === slug);
+      const summary = this.idx()?.pages.find((x) => x.slug === rawSlug || x.slug === decodedSlug);
       if (p) {
-        this.seo.set({ title: p.title, description: summary?.excerpt, path: `/wiki/${encodeURIComponent(slug)}` });
+        this.seo.set({
+          title: p.title,
+          description: summary?.excerpt,
+          path: `/wiki/${encodeURIComponent(p.slug)}`,
+        });
       } else if (this.page.status() === 'resolved') {
-        this.seo.set({ title: 'ページが見つかりません', path: `/wiki/${encodeURIComponent(slug)}` });
+        this.seo.set({
+          title: 'ページが見つかりません',
+          path: `/wiki/${encodeURIComponent(decodedSlug)}`,
+        });
       }
     });
 
@@ -107,6 +123,23 @@ export class WikiPageView {
     this.isEditorOpen.set(false);
   }
 
+  protected openGuide() {
+    this.isGuideOpen.set(true);
+  }
+
+  protected closeGuide() {
+    this.isGuideOpen.set(false);
+  }
+
+  protected toggleMobileToc() {
+    this.mobileTocOpen.set(!this.mobileTocOpen());
+  }
+
+  protected scrollToTop() {
+    if (!this.browser) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   protected onEditorSaved() {
     this.page.reload();
   }
@@ -122,7 +155,6 @@ export class WikiPageView {
       e.preventDefault();
       const el = document.getElementById(decodeURIComponent(href.slice(1)));
       el?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-      // <base href="/"> があるので、"#id" だけだとトップページの URL になってしまう
       history.replaceState(history.state, '', location.pathname + location.search + href);
       return;
     }

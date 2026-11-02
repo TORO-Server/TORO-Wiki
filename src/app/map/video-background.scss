@@ -15,10 +15,13 @@ video,
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 1.4s ease;
+  transform: scale(1.14);
+  transition: opacity 1.4s ease, transform 20s cubic-bezier(0.1, 0.8, 0.3, 1);
+  will-change: transform, opacity;
 
   &.on {
     opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -26,6 +29,7 @@ video,
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 1;
   transition: background 0.8s ease;
 }
 
@@ -39,9 +43,97 @@ video,
   background: rgb(var(--veil-rgb) / 0.25);
 }
 
+// ----------------------------------------------------
+// カスケーディング 3D グリッドタイル シャッター カバー
+// ----------------------------------------------------
+
+.shutter-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+  perspective: 900px;
+}
+
+.shutter-tile-row {
+  display: flex;
+  width: 100%;
+  height: 46px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.shutter-tile {
+  position: relative;
+  width: 10%;
+  height: 100%;
+  // 深みのあるサイバーダークネイビー
+  background: #020712;
+  transform: rotateX(0deg);
+  transform-origin: left center;
+  box-shadow: inset 0 0 1px rgb(30 110 255 / 0.22);
+  transition:
+    transform 1.4s cubic-bezier(0.5, 1, 0.89, 1),
+    opacity 0.8s ease;
+
+  &:nth-child(n + 6) {
+    transform-origin: right center;
+  }
+}
+
+// 開放時: 3D回転 (rotateX 270deg) しながら背後のマップ動画が現れる
+.shutter-cover.is-open .shutter-tile {
+  transform: rotateX(270deg);
+  opacity: 0;
+
+  // 上段から下段へカスケード + 左右から中央への波状ディレイ
+  transition-delay:
+    calc(var(--row-index) * 45ms + var(--col-delay, 0ms)),
+    calc(var(--row-index) * 45ms + var(--col-delay, 0ms));
+}
+
+// タイル列ごとのアニメーション遅延 (外側から中央へ、または左右シンメトリー)
+.shutter-tile:nth-child(1),
+.shutter-tile:nth-child(10) {
+  --col-delay: 360ms;
+}
+.shutter-tile:nth-child(2),
+.shutter-tile:nth-child(9) {
+  --col-delay: 270ms;
+}
+.shutter-tile:nth-child(3),
+.shutter-tile:nth-child(8) {
+  --col-delay: 180ms;
+}
+.shutter-tile:nth-child(4),
+.shutter-tile:nth-child(7) {
+  --col-delay: 90ms;
+}
+.shutter-tile:nth-child(5),
+.shutter-tile:nth-child(6) {
+  --col-delay: 0ms;
+}
+
+// 切替時: シャッターが高速に閉じて画面を覆う
+.shutter-cover.is-switching .shutter-tile {
+  transform: rotateX(0deg);
+  opacity: 1;
+  transition-duration: 0.35s;
+  transition-delay: calc(var(--row-index) * 12ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
   video,
-  .still {
-    transition: none;
+  .still,
+  .shutter-tile {
+    transition: none !important;
+    animation: none !important;
+  }
+  .shutter-cover {
+    display: none;
   }
 }

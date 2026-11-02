@@ -108,9 +108,17 @@ export class ContentService {
     return this.load<WikiIndex>('index.json');
   }
 
-  async page(slug: string): Promise<WikiPage | null> {
+  async page(rawSlug: string): Promise<WikiPage | null> {
     const index = await this.index();
-    const summary = index.pages.find((p) => p.slug === slug);
+    let decoded = rawSlug;
+    try {
+      decoded = decodeURIComponent(rawSlug);
+    } catch {
+      // ignore
+    }
+    const summary = index.pages.find(
+      (p) => p.slug === rawSlug || p.slug === decoded || decodeURIComponent(p.slug) === decoded,
+    );
     if (!summary) return null;
     return this.load<WikiPage>(`pages/${summary.id}.json`);
   }

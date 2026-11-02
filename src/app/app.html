@@ -11,11 +11,23 @@
           <span>TORO Server Wiki</span>
         </a>
 
+        <!-- マップロケーション情報インジケーター -->
+        @if (stage.current(); as currentPoi) {
+          <div class="map-indicator" [title]="currentPoi.name + ' (' + currentPoi.note + ')'">
+            <span class="pulse-dot"></span>
+            <span class="poi-label">{{ currentPoi.name }}</span>
+            <span class="poi-coords">[{{ currentPoi.x }}, {{ currentPoi.z }}]</span>
+          </div>
+        }
+
         <nav class="nav" aria-label="メインメニュー">
           <a routerLink="/wiki" routerLinkActive="active">ページ一覧</a>
           <a routerLink="/updates" routerLinkActive="active">更新履歴</a>
           <a routerLink="/map" routerLinkActive="active">3D マップ</a>
           <a [routerLink]="['/wiki', 'ルール']" routerLinkActive="active">ルール</a>
+          <button type="button" class="nav-guide-btn" (click)="openEditGuide()">
+            <app-icon name="edit" /> 編集ガイド
+          </button>
           <a [href]="site.discord" target="_blank" rel="noopener">Discord</a>
         </nav>
 
@@ -66,6 +78,9 @@
                   <span class="role-badge">{{ u.can_edit ? '編集可能' : '閲覧のみ' }}</span>
                 </div>
                 <hr />
+                <button type="button" class="menu-item" (click)="openEditGuide()">
+                  <app-icon name="edit" /> Wikiの編集方法
+                </button>
                 <button type="button" class="menu-item" (click)="openAiModal()">
                   <app-icon name="network" /> AI コネクタ設定
                 </button>
@@ -75,7 +90,7 @@
               </div>
             }
           } @else {
-            <button class="tb-auth-btn" type="button" (click)="auth.login()">
+            <button class="tb-auth-btn" type="button" (click)="auth.login()" title="Discord でログインしてブラウザ上で編集">
               Discord ログイン
             </button>
           }
@@ -102,14 +117,27 @@
           <a routerLink="/updates">更新履歴</a>
           <a routerLink="/map">3D マップ</a>
           <a [routerLink]="['/wiki', 'ルール']">ルール</a>
+          <button type="button" class="mobile-link edit-guide-link" (click)="openEditGuide()">
+            <app-icon name="edit" /> Wiki編集ガイド (Web / GitHub)
+          </button>
           <a [href]="site.discord" target="_blank" rel="noopener">Discord</a>
           <hr />
-          <button type="button" class="mobile-link" (click)="openAiModal()">AI コネクタ (Claude/ChatGPT/Gemini)</button>
+          <button type="button" class="mobile-link" (click)="openAiModal()">
+            <app-icon name="network" /> AI コネクタ (Claude / ChatGPT / Gemini)
+          </button>
           @if (auth.user(); as u) {
-            <span class="mobile-user">{{ u.global_name || u.username }} でログイン中</span>
-            <button type="button" class="mobile-link" (click)="auth.logout()">ログアウト</button>
+            <div class="mobile-user-card">
+              <img [src]="u.avatar_url" alt="" class="tb-avatar" />
+              <div>
+                <strong>{{ u.global_name || u.username }}</strong>
+                <span class="role-badge">{{ u.can_edit ? '編集可能' : '閲覧のみ' }}</span>
+              </div>
+            </div>
+            <button type="button" class="mobile-link danger" (click)="auth.logout()">ログアウト</button>
           } @else {
-            <button type="button" class="mobile-link auth-highlight" (click)="auth.login()">Discord でログイン</button>
+            <button type="button" class="mobile-link auth-highlight" (click)="auth.login()">
+              Discord でログイン (Web編集を有効化)
+            </button>
           }
         </nav>
       }
@@ -122,6 +150,7 @@
     <footer class="statusbar">
       <span class="cell grow">
         <a routerLink="/wiki">ページ一覧</a> ・ <a routerLink="/updates">更新履歴</a> ・ <a href="/feed.xml">RSS</a> ・
+        <a (click)="openEditGuide()" style="cursor: pointer;">編集ガイド</a> ・
         <a [href]="site.repo" target="_blank" rel="noopener">GitHub</a> ・ <a [href]="site.seesaa" target="_blank" rel="noopener">旧 Wiki (seesaa)</a>
       </span>
       <span class="cell">
@@ -134,3 +163,4 @@
 </div>
 
 <app-ai-connector-modal [isOpen]="aiModalOpen()" (close)="aiModalOpen.set(false)" />
+<app-edit-guide-modal [isOpen]="editGuideOpen()" (close)="editGuideOpen.set(false)" />

@@ -5,6 +5,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 import { AuthService, AUTH_BASE_URL } from '../../../core/auth';
 import { Icon } from '../../../core/icons';
+import { SITE } from '../../../core/site';
 
 @Component({
   selector: 'app-wiki-editor',
@@ -22,6 +23,7 @@ export class WikiEditorComponent {
   readonly saved = output<void>();
 
   protected readonly auth = inject(AuthService);
+  protected readonly site = SITE;
   private readonly sanitizer = inject(DomSanitizer);
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -33,6 +35,8 @@ export class WikiEditorComponent {
   protected readonly activeTab = signal<'split' | 'edit' | 'preview'>('split');
   protected readonly error = signal<string | null>(null);
   protected readonly success = signal<string | null>(null);
+
+  protected readonly githubEditUrl = computed(() => `${SITE.repo}/edit/main/${this.path()}`);
 
   protected readonly previewHtml = computed<SafeHtml>(() => {
     const raw = this.content();
@@ -50,6 +54,12 @@ export class WikiEditorComponent {
       const open = this.isOpen();
       const p = this.path();
       if (open && p && this.browser) {
+        // モバイル幅の場合は初期表示を edit タブにする
+        if (window.innerWidth <= 768) {
+          this.activeTab.set('edit');
+        } else {
+          this.activeTab.set('split');
+        }
         void this.loadFile(p);
       }
     });
@@ -120,6 +130,10 @@ export class WikiEditorComponent {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  loginWithDiscord() {
+    this.auth.login();
   }
 
   onClose() {

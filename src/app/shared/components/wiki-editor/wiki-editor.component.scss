@@ -70,6 +70,28 @@
   }
 }
 
+// 未ログイン時の案内バー
+.login-prompt-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #fff8e1;
+  border-bottom: 1px solid #ffe082;
+  font-size: 12px;
+
+  .prompt-text {
+    color: #b78103;
+  }
+
+  .prompt-actions {
+    display: flex;
+    gap: 6px;
+  }
+}
+
 .window-toolbar {
   background: #f1efe2;
   border-bottom: 1px solid #d0ccb8;
@@ -99,7 +121,7 @@
       &.active {
         background: #0055ea;
         color: #fff;
-        border-color: #082878;
+        border-color: #003c74;
         font-weight: bold;
       }
     }
@@ -116,42 +138,49 @@
       align-items: center;
       gap: 6px;
       background: #fff;
-      padding: 2px 8px;
       border: 1px solid #7f9db9;
+      padding: 2px 8px;
       border-radius: 12px;
 
       .avatar {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         border-radius: 50%;
       }
     }
 
-    .auth-warning {
-      color: #b00;
-      font-weight: bold;
+    .github-fallback-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #0055ea;
+      text-decoration: none;
+      font-size: 12px;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
 
 .window-body {
   flex: 1;
-  background: #fff;
+  min-height: 0;
   position: relative;
-  overflow: hidden;
+  background: #fff;
+  border-bottom: 1px solid #d0ccb8;
 
   &.loading {
-    background: #f9f9f9;
-  }
-
-  .loading-overlay {
-    position: absolute;
-    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    color: #444;
+  }
+
+  .loading-overlay {
+    text-align: center;
+    color: #666;
+    font-size: 13px;
   }
 
   .workspace {
@@ -162,45 +191,51 @@
     .pane {
       flex: 1;
       height: 100%;
-      overflow: auto;
+      overflow-y: auto;
+      min-width: 0;
+    }
+
+    .edit-pane {
+      border-right: 1px solid #d0ccb8;
+    }
+
+    .markdown-input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      padding: 12px;
+      resize: none;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
       box-sizing: border-box;
+      background: transparent;
+      color: #000;
+    }
 
-      &.edit-pane {
-        border-right: 2px solid #ece9d8;
+    .preview-pane {
+      padding: 16px 20px;
+      background: #fafafa;
+    }
 
-        .markdown-input {
-          width: 100%;
-          height: 100%;
-          border: none;
-          padding: 12px;
-          font-family: 'Consolas', 'Courier New', monospace;
-          font-size: 13px;
-          line-height: 1.5;
-          resize: none;
-          outline: none;
-          box-sizing: border-box;
-          background: #fafafa;
-        }
+    &[data-mode='edit'] {
+      .edit-pane {
+        flex: 1 1 100%;
+        border-right: none;
       }
-
-      &.preview-pane {
-        padding: 16px;
-        background: #fff;
-
-        .preview-content {
-          font-size: 14px;
-          line-height: 1.6;
-        }
+      .preview-pane {
+        display: none;
       }
     }
 
-    &[data-mode='edit'] .edit-pane {
-      flex: 1;
-      border-right: none;
-    }
-
-    &[data-mode='preview'] .preview-pane {
-      flex: 1;
+    &[data-mode='preview'] {
+      .edit-pane {
+        display: none;
+      }
+      .preview-pane {
+        flex: 1 1 100%;
+      }
     }
   }
 }
@@ -213,21 +248,20 @@
   gap: 8px;
 
   &.error-banner {
-    background: #ffd6d6;
-    color: #a00;
-    border-top: 1px solid #e09999;
+    background: #ffebe8;
+    border-bottom: 1px solid #ffbaba;
+    color: #d8000c;
   }
 
   &.success-banner {
-    background: #d6ffd6;
-    color: #070;
-    border-top: 1px solid #99e099;
+    background: #eef9e8;
+    border-bottom: 1px solid #bce2a8;
+    color: #270;
   }
 }
 
 .window-footer {
   background: #ece9d8;
-  border-top: 1px solid #fff;
   padding: 8px 12px;
   display: flex;
   flex-direction: column;
@@ -240,13 +274,13 @@
     font-size: 12px;
 
     label {
+      flex: none;
       font-weight: bold;
-      white-space: nowrap;
     }
 
     .commit-msg-input {
       flex: 1;
-      padding: 4px 8px;
+      padding: 4px 6px;
       border: 1px solid #7f9db9;
       border-radius: 2px;
       font-size: 12px;
@@ -259,6 +293,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
+    flex-wrap: wrap;
 
     .path-hint {
       margin-right: auto;
@@ -278,6 +313,11 @@
   font-family: inherit;
   cursor: pointer;
   box-shadow: inset 1px 1px #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #000;
 
   &:hover:not(:disabled) {
     background: linear-gradient(180deg, #eef 0%, #d8e0f0 100%);
@@ -304,6 +344,74 @@
 
     &:hover:not(:disabled) {
       background: linear-gradient(180deg, #70b4ff 0%, #2874e8 100%);
+    }
+  }
+}
+
+// モバイル端末向け最適化
+@media (max-width: 768px) {
+  .editor-backdrop {
+    padding: 0;
+  }
+
+  .editor-window {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .window-titlebar {
+    padding: 10px 12px;
+    font-size: 14px;
+
+    .btn-close {
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
+    }
+  }
+
+  .window-toolbar {
+    padding: 8px 10px;
+
+    .tabs .tab-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+
+  .markdown-input {
+    font-size: 16px !important; // iOSでフォーカス時にズームするのを防止
+  }
+
+  .window-footer {
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+
+    .commit-input-group {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .commit-msg-input {
+        width: 100%;
+        height: 36px;
+        font-size: 14px;
+      }
+    }
+
+    .footer-actions {
+      .path-hint {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+
+      .xp-btn {
+        flex: 1;
+        min-height: 38px;
+        justify-content: center;
+        font-size: 13px;
+      }
     }
   }
 }

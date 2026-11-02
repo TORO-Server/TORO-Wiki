@@ -11,10 +11,20 @@ import { SITE } from './core/site';
 import { PwaUpdates } from './core/pwa';
 import { AuthService } from './core/auth';
 import { AiConnectorModalComponent } from './shared/components/ai-connector-modal/ai-connector-modal.component';
+import { EditGuideModalComponent } from './shared/components/edit-guide-modal/edit-guide-modal.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FormsModule, VideoBackground, Icon, AiConnectorModalComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    FormsModule,
+    VideoBackground,
+    Icon,
+    AiConnectorModalComponent,
+    EditGuideModalComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   host: {
@@ -34,6 +44,7 @@ export class App {
   protected readonly menuOpen = signal(false);
   protected readonly userMenuOpen = signal(false);
   protected readonly aiModalOpen = signal(false);
+  protected readonly editGuideOpen = signal(false);
   protected readonly query = signal('');
   protected readonly dark = signal(false);
 
@@ -75,6 +86,12 @@ export class App {
     this.aiModalOpen.set(true);
   }
 
+  protected openEditGuide() {
+    this.menuOpen.set(false);
+    this.userMenuOpen.set(false);
+    this.editGuideOpen.set(true);
+  }
+
   protected onKey(e: KeyboardEvent) {
     const target = e.target as HTMLElement;
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) || target.isContentEditable;
@@ -86,6 +103,7 @@ export class App {
       this.menuOpen.set(false);
       this.userMenuOpen.set(false);
       this.aiModalOpen.set(false);
+      this.editGuideOpen.set(false);
     }
   }
 }

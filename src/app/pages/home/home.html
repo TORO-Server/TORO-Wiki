@@ -20,6 +20,9 @@
       <div class="actions">
         <a class="btn primary" routerLink="/wiki">ページ一覧</a>
         <a class="btn" routerLink="/updates">更新履歴</a>
+        <button class="btn edit-guide-btn" type="button" (click)="isGuideOpen.set(true)">
+          <app-icon name="edit" /> 記事の編集方法
+        </button>
         <button class="btn" type="button" (click)="random()">ランダムなページ</button>
       </div>
     </div>
@@ -55,6 +58,11 @@
         <h2>はじめての方へ</h2>
         <div class="pane-body">
           <ul>
+            <li>
+              <a (click)="isGuideOpen.set(true)" style="cursor: pointer; font-weight: bold; color: #0b4fc7;">
+                ★ 記事の編集方法 (Web / GitHub)
+              </a>
+            </li>
             <li><a [routerLink]="['/wiki', 'ルール']">ルール</a></li>
             <li><a [routerLink]="['/wiki', '利用規約']">利用規約</a></li>
             <li><a [routerLink]="['/wiki', 'よくある質問']">よくある質問</a></li>
@@ -100,25 +108,8 @@
           </li>
         }
       </ul>
-
-      <h2 class="list-title">最近更新されたページ</h2>
-      <div class="details">
-        <table>
-          <thead>
-            <tr><th>名前</th><th>更新日時</th><th>更新者</th></tr>
-          </thead>
-          <tbody>
-            @for (p of recent(); track p.slug) {
-              <tr>
-                <td><a [routerLink]="['/wiki', p.slug]">{{ p.title }}</a></td>
-                <td>{{ p.updated | jaDate }}</td>
-                <td>{{ p.author }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-      <p class="more"><a routerLink="/updates">更新履歴をすべて見る</a></p>
     </div>
   </div>
 </div>
+
+<app-edit-guide-modal [isOpen]="isGuideOpen()" (close)="isGuideOpen.set(false)" />

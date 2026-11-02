@@ -8,10 +8,11 @@ import { SITE } from '../../core/site';
 import { CATEGORY_ICON } from '../../shared/categories';
 import { MapStage } from '../../map/map-stage';
 import { blueMapUrl, poiPageSlug } from '../../map/map-types';
+import { EditGuideModalComponent } from '../../shared/components/edit-guide-modal/edit-guide-modal.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, Icon, JaDatePipe],
+  imports: [RouterLink, Icon, JaDatePipe, EditGuideModalComponent],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -22,6 +23,7 @@ export class Home {
   protected readonly site = SITE;
   protected readonly icon = CATEGORY_ICON;
   protected readonly query = signal('');
+  protected readonly isGuideOpen = signal(false);
 
   protected readonly index = resource({ loader: () => this.content.index() });
 

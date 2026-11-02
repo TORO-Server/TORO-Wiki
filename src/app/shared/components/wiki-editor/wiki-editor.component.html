@@ -12,6 +12,23 @@
         </div>
       </div>
 
+      <!-- 未ログイン時の案内バー (迷わせない設計) -->
+      @if (!auth.user()) {
+        <div class="login-prompt-bar">
+          <div class="prompt-text">
+            <strong>⚠️ 現在未ログインです。</strong> Web上で直接コミットするには Discord ログインが必要です。
+          </div>
+          <div class="prompt-actions">
+            <button type="button" class="xp-btn xp-btn-primary" (click)="loginWithDiscord()">
+              Discord でログイン
+            </button>
+            <a [href]="githubEditUrl()" target="_blank" rel="noopener" class="xp-btn">
+              <app-icon name="external" /> GitHub で編集する
+            </a>
+          </div>
+        </div>
+      }
+
       <!-- ツールバー / タブ -->
       <div class="window-toolbar">
         <div class="tabs">
@@ -21,7 +38,7 @@
             [class.active]="activeTab() === 'split'"
             (click)="activeTab.set('split')"
           >
-            2画面 (編集 + プレビュー)
+            2画面
           </button>
           <button
             type="button"
@@ -48,8 +65,9 @@
               <span>{{ u.global_name || u.username }} として編集</span>
             </span>
           } @else {
-            <span class="auth-warning">未ログイン (保存できません)</span>
-            <button type="button" class="xp-btn" (click)="auth.login()">Discord ログイン</button>
+            <a [href]="githubEditUrl()" target="_blank" rel="noopener" class="github-fallback-link">
+              <app-icon name="external" /> GitHub で直接編集
+            </a>
           }
         </div>
       </div>
@@ -112,19 +130,29 @@
 
         <div class="footer-actions">
           <span class="path-hint">{{ path() }}</span>
-          <button type="button" class="xp-btn" (click)="onClose()" [disabled]="saving()">キャンセル</button>
-          <button
-            type="button"
-            class="xp-btn xp-btn-primary"
-            (click)="save()"
-            [disabled]="loading() || saving() || !auth.user()?.can_edit"
-          >
-            @if (saving()) {
-              <span>保存中…</span>
-            } @else {
-              <span>保存してコミット</span>
-            }
-          </button>
+          <button type="button" class="xp-btn" (click)="onClose()" [disabled]="saving()">閉じる</button>
+
+          @if (!auth.user()) {
+            <button type="button" class="xp-btn xp-btn-primary" (click)="loginWithDiscord()">
+              ログインして保存
+            </button>
+            <a [href]="githubEditUrl()" target="_blank" rel="noopener" class="xp-btn">
+              GitHub でコミット
+            </a>
+          } @else {
+            <button
+              type="button"
+              class="xp-btn xp-btn-primary"
+              (click)="save()"
+              [disabled]="loading() || saving() || !auth.user()?.can_edit"
+            >
+              @if (saving()) {
+                <span>保存中…</span>
+              } @else {
+                <span>保存してコミット</span>
+              }
+            </button>
+          }
         </div>
       </div>
     </div>

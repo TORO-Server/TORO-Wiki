@@ -6,14 +6,31 @@
         <div class="pane-body">
           <ul class="tasks">
             <li>
-              <button type="button" class="task-btn" (click)="openEditor()">
-                <app-icon name="edit" /> このページを編集
+              <button type="button" class="task-btn primary-action" (click)="openEditor()">
+                <app-icon name="edit" /> このページをWeb編集
               </button>
             </li>
-            <li><a [href]="editUrl()" target="_blank" rel="noopener"><app-icon name="external" /> GitHub で編集</a></li>
-            <li><a [href]="historyUrl()" target="_blank" rel="noopener"><app-icon name="history" /> 変更の履歴</a></li>
+            <li>
+              <a [href]="editUrl()" target="_blank" rel="noopener">
+                <app-icon name="external" /> GitHub で編集
+              </a>
+            </li>
+            <li>
+              <button type="button" class="task-btn guide-link" (click)="openGuide()">
+                <app-icon name="book" /> 記事の編集方法
+              </button>
+            </li>
+            <li>
+              <a [href]="historyUrl()" target="_blank" rel="noopener">
+                <app-icon name="history" /> 変更の履歴
+              </a>
+            </li>
             @if (p.seesaa) {
-              <li><a [href]="p.seesaa" target="_blank" rel="noopener"><app-icon name="external" /> 旧 Wiki (seesaa) で見る</a></li>
+              <li>
+                <a [href]="p.seesaa" target="_blank" rel="noopener">
+                  <app-icon name="external" /> 旧 Wiki (seesaa) で見る
+                </a>
+              </li>
             }
           </ul>
         </div>
@@ -67,26 +84,49 @@
 
     @if (current(); as p) {
       <article class="sheet doc">
-        <h1>{{ p.title }}</h1>
-        <p class="meta">
-          @if (p.updated) {
-            最終更新: <time [attr.datetime]="p.updated">{{ p.updated | jaDate }}</time>
-          }
-          @if (p.author) {
-            ・ {{ p.author }}
-          }
-          <span class="mobile-actions">
-            <button type="button" class="link-btn" (click)="openEditor()">編集</button>
-            <a [href]="historyUrl()" target="_blank" rel="noopener">履歴</a>
-            @if (p.seesaa) {
-              <a [href]="p.seesaa" target="_blank" rel="noopener">旧 Wiki</a>
+        <header class="doc-header">
+          <h1>{{ p.title }}</h1>
+          <p class="meta">
+            @if (p.updated) {
+              最終更新: <time [attr.datetime]="p.updated">{{ p.updated | jaDate }}</time>
             }
-          </span>
-        </p>
+            @if (p.author) {
+              ・ {{ p.author }}
+            }
+          </p>
+
+          <!-- 記事編集クイックアクションバー (直感的な導線) -->
+          <div class="edit-quick-bar" aria-label="記事の編集導線">
+            <button type="button" class="quick-btn web-edit-btn" (click)="openEditor()">
+              <app-icon name="edit" />
+              <span>Web上で編集</span>
+              @if (auth.user()?.can_edit) {
+                <span class="edit-badge">即時保存可能</span>
+              } @else {
+                <span class="edit-badge login-needed">Discord認証</span>
+              }
+            </button>
+
+            <a [href]="editUrl()" target="_blank" rel="noopener" class="quick-btn github-edit-btn">
+              <app-icon name="external" />
+              <span>GitHub で編集</span>
+            </a>
+
+            <button type="button" class="quick-btn guide-btn" (click)="openGuide()" title="編集方法を見る">
+              <app-icon name="book" />
+              <span>編集ガイド</span>
+            </button>
+
+            <a [href]="historyUrl()" target="_blank" rel="noopener" class="quick-btn history-btn" title="変更履歴">
+              <app-icon name="history" />
+              <span>履歴</span>
+            </a>
+          </div>
+        </header>
 
         @if (toc().length > 2) {
           <details class="toc-mobile">
-            <summary>目次</summary>
+            <summary>目次 (タップして開閉)</summary>
             <ol>
               @for (t of toc(); track t.id) {
                 <li [class.sub]="t.depth === 3"><a routerLink="." [fragment]="t.id">{{ t.text }}</a></li>
@@ -96,6 +136,29 @@
         }
 
         <div #article class="prose" [innerHTML]="html()" (click)="onArticleClick($event)"></div>
+
+        <!-- 記事下部の編集・貢献案内カード -->
+        <section class="edit-contribution-box" aria-label="Wikiの編集に参加">
+          <div class="contrib-header">
+            <app-icon name="edit" />
+            <h3>この記事を改善・編集しませんか？</h3>
+          </div>
+          <p class="contrib-desc">
+            誤字脱字の修正、新しい情報の追記など、誰でも自由に編集できます。<br />
+            ブラウザからDiscordアカウントですぐに編集するか、GitHubからPull Requestを提案できます。
+          </p>
+          <div class="contrib-actions">
+            <button type="button" class="contrib-btn primary" (click)="openEditor()">
+              <app-icon name="edit" /> Webエディタで編集する
+            </button>
+            <a [href]="editUrl()" target="_blank" rel="noopener" class="contrib-btn">
+              <app-icon name="external" /> GitHub で編集
+            </a>
+            <button type="button" class="contrib-btn outline" (click)="openGuide()">
+              <app-icon name="book" /> 詳しい編集手順
+            </button>
+          </div>
+        </section>
 
         @if (backlinks().length) {
           <section class="backlinks" aria-labelledby="backlinks-title">
@@ -120,12 +183,58 @@
         </nav>
       </article>
 
+      <!-- モバイル用 固定フローティングアクションバー (親指で操作しやすいUI) -->
+      <aside class="mobile-bottom-bar" aria-label="モバイル用ページ操作">
+        <button type="button" class="mbb-item primary" (click)="openEditor()" aria-label="このページを編集">
+          <app-icon name="edit" />
+          <span>編集</span>
+        </button>
+        @if (toc().length > 2) {
+          <button type="button" class="mbb-item" (click)="toggleMobileToc()" aria-label="目次を開閉">
+            <app-icon name="book" />
+            <span>目次</span>
+          </button>
+        }
+        <button type="button" class="mbb-item" (click)="openGuide()" aria-label="編集ガイド">
+          <app-icon name="network" />
+          <span>ガイド</span>
+        </button>
+        <button type="button" class="mbb-item" (click)="scrollToTop()" aria-label="ページ最上部へ戻る">
+          <app-icon name="prev" style="transform: rotate(90deg);" />
+          <span>上へ</span>
+        </button>
+      </aside>
+
+      <!-- モバイル用 目次ポップアップドロワー -->
+      @if (mobileTocOpen() && toc().length > 2) {
+        <div class="mobile-toc-drawer-backdrop" (click)="mobileTocOpen.set(false)">
+          <div class="mobile-toc-drawer xp-window" (click)="$event.stopPropagation()">
+            <div class="xp-titlebar">
+              <span class="title">目次</span>
+              <button type="button" class="close-btn" (click)="mobileTocOpen.set(false)">✕</button>
+            </div>
+            <ol class="drawer-toc-list">
+              @for (t of toc(); track t.id) {
+                <li [class.sub]="t.depth === 3">
+                  <a routerLink="." [fragment]="t.id" (click)="mobileTocOpen.set(false)">{{ t.text }}</a>
+                </li>
+              }
+            </ol>
+          </div>
+        </div>
+      }
+
       <app-wiki-editor
         [isOpen]="isEditorOpen()"
         [path]="p.source"
         [title]="p.title"
         (close)="closeEditor()"
         (saved)="onEditorSaved()"
+      />
+
+      <app-edit-guide-modal
+        [isOpen]="isGuideOpen()"
+        (close)="closeGuide()"
       />
     } @else if (page.status() === 'error') {
       <article class="sheet doc missing">

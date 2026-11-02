@@ -46,6 +46,7 @@
   border-bottom: 0;
   border-radius: 8px 8px 0 0;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3);
+  backdrop-filter: blur(8px);
 }
 
 .bar {
@@ -60,7 +61,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-right: 10px;
+  margin-right: 8px;
   color: #fff;
   font-size: 20px;
   text-decoration: none;
@@ -72,22 +73,80 @@
   }
 }
 
+// マップロケーション HUD インジケーター
+.map-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  margin-right: 6px;
+  border-radius: 3px;
+  background: rgb(0 0 0 / 0.3);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  font-size: 0.78rem;
+  color: #d8e8ff;
+  white-space: nowrap;
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00ffaa;
+    box-shadow: 0 0 6px #00ffaa;
+    animation: pulseDot 2s infinite;
+  }
+
+  .poi-label {
+    font-weight: 700;
+  }
+
+  .poi-coords {
+    color: rgb(255 255 255 / 0.65);
+    font-size: 0.72rem;
+    font-family: monospace;
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
 .nav {
   display: flex;
+  align-items: center;
   gap: 2px;
 
-  a {
-    padding: 4px 12px;
+  a,
+  .nav-guide-btn {
+    padding: 4px 10px;
     border-radius: 3px;
     color: #fff;
-    font-size: 16px;
+    font-size: 15px;
     text-decoration: none;
     text-shadow: 1px 1px 0 rgb(0 0 0 / 0.5);
     white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: inherit;
 
     &:hover,
     &.active {
-      background: rgb(0 0 0 / 0.12);
+      background: rgb(0 0 0 / 0.15);
+    }
+  }
+
+  .nav-guide-btn {
+    color: #ffe680;
+    font-weight: bold;
+    border: 1px dashed rgb(255 230 128 / 0.4);
+
+    &:hover {
+      background: rgb(255 230 128 / 0.2);
     }
   }
 }
@@ -139,7 +198,6 @@
     background: linear-gradient(180deg, #5aa0ff, #2a6ee0);
   }
 }
-
 
 .user-menu-wrap {
   position: relative;
@@ -265,7 +323,7 @@
 
 .mobile-link {
   width: 100%;
-  padding: 10px 4px;
+  padding: 10px 6px;
   color: #fff;
   background: none;
   border: none;
@@ -273,17 +331,46 @@
   text-align: left;
   font-size: 14px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.edit-guide-link {
+    color: #ffe680;
+    font-weight: bold;
+  }
 
   &.auth-highlight {
     color: #ffd700;
     font-weight: bold;
+    background: rgb(88 101 242 / 0.25);
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+
+  &.danger {
+    color: #ff9999;
   }
 }
 
-.mobile-user {
-  padding: 8px 4px 2px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
+.mobile-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px 6px;
+  color: #fff;
+
+  .tb-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+
+  .role-badge {
+    display: block;
+    font-size: 11px;
+    color: #a4caff;
+  }
 }
 
 .menu-btn {
@@ -292,7 +379,7 @@
 
 .mobile-nav {
   display: grid;
-  padding: 0 12px 10px;
+  padding: 0 12px 12px;
 
   a {
     padding: 10px 4px;
@@ -359,7 +446,10 @@ main {
 }
 
 @media (max-width: 996px) {
-  // 横向きの iPhone などでは、切り欠きの横にデスクトップ (動画) を見せる
+  .map-indicator {
+    display: none;
+  }
+
   .desktop {
     padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
   }
@@ -393,7 +483,6 @@ main {
       flex: 1 1 100%;
     }
 
-    // 指で押せる高さにする (見た目はステータスバーのまま)
     a {
       display: inline-flex;
       align-items: center;
@@ -411,7 +500,6 @@ main {
     display: grid;
   }
 
-  // タイトルバーの部品も、指で押せる 40px にする
   .brand {
     justify-content: center;
     min-width: 40px;
