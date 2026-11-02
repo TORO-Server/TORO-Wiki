@@ -2,14 +2,26 @@ import { Env, UserSession } from '../lib/types';
 import { getSession } from '../lib/auth';
 import { signJwt } from '../lib/jwt';
 import { jsonResponse, errorResponse, handleCors } from '../lib/response';
+import { checkOrigin } from '../lib/security';
 
 export const onRequest: PagesFunction<Env> = async (context) => {
   const cors = handleCors(context.request);
   if (cors) return cors;
 
+  // 別のサイトのページから、ログイン中の人のトークンを発行させない
+  if (!checkOrigin(context.request, context.env)) {
+    return errorResponse('Origin not allowed', 403);
+  }
+
   const session = await getSession(context.request, context.env);
   if (!session) {
     return errorResponse('Authentication required. Please log in via Discord.', 401);
+  }
+
+  // AI コネクタのトークンで、新しいトークンを発行できてしまうと、一度漏れたトークンが 90 日ごとに延命され、事実上失効しない。
+  // 発行できるのは、Discord でログインしたブラウザーだけにする
+  if (session.type === 'ai_connector' || context.request.headers.get('Authorization')?.startsWith('Bearer ')) {
+    return errorResponse('AI connector tokens cannot issue new tokens. Log in with Discord in the browser.', 403);
   }
 
   // 90 日間有効な AI コネクタ用 Bearer トークンを発行

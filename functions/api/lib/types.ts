@@ -11,6 +11,8 @@ export interface Env {
   GITHUB_BRANCH?: string;
   JWT_SECRET: string;
   COOKIE_DOMAIN?: string;
+  /** ログイン・編集の API を呼んでよいサイトを足す (カンマ区切り。既定は https://wiki.torosaba.net)。開発中は http://localhost:4200 など */
+  ALLOWED_ORIGINS?: string;
 }
 
 export interface UserSession {
@@ -23,6 +25,8 @@ export interface UserSession {
   roles: string[];
   iat: number;
   exp: number;
+  /** AI コネクタ用のトークンには 'ai_connector' が入る (ブラウザーのログインにはない) */
+  type?: string;
 }
 
 export interface DiscordUser {

@@ -1,6 +1,7 @@
 import { Env, DiscordUser, DiscordGuildMember, UserSession } from '../lib/types';
 import { signJwt } from '../lib/jwt';
-import { buildSessionCookie } from '../lib/auth';
+import { buildSessionCookie, parseCookies } from '../lib/auth';
+import { escapeHtml, resolveReturnTo } from '../lib/security';
 import { errorResponse } from '../lib/response';
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -13,17 +14,23 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     return errorResponse('Missing code parameter', 400);
   }
 
-  let returnTo = '/wiki';
+  // state は login.ts が作ったもの。同じ nonce を Cookie にも置いてあるので、突き合わせる
+  let rawReturnTo: string | null = null;
+  let stateNonce: string | null = null;
   if (stateParam) {
     try {
-      const stateData = JSON.parse(atob(stateParam));
-      if (stateData.returnTo && stateData.returnTo.startsWith('/')) {
-        returnTo = stateData.returnTo;
-      }
+      const stateData = JSON.parse(atob(stateParam)) as { returnTo?: string; nonce?: string };
+      rawReturnTo = stateData.returnTo ?? null;
+      stateNonce = stateData.nonce ?? null;
     } catch {
       // ignore
     }
   }
+  const cookieNonce = parseCookies(context.request.headers.get('Cookie'))['wiki_oauth_state'];
+  if (!stateNonce || !cookieNonce || stateNonce !== cookieNonce) {
+    return errorResponse('ログインをやり直してください (state が一致しません)', 400);
+  }
+  const returnTo = resolveReturnTo(rawReturnTo, env, url);
 
   const redirectUri = env.DISCORD_REDIRECT_URI || `${url.origin}/api/auth/callback`;
 
@@ -46,7 +53,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   if (!tokenRes.ok) {
     const errText = await tokenRes.text();
     console.error('Discord token exchange failed:', errText);
-    return errorResponse('Failed to exchange code with Discord', 400, errText);
+    // Discord の応答の中身は、利用者には見せない (ログにだけ残す)
+    return errorResponse('Failed to exchange code with Discord', 400);
   }
 
   const tokenData = (await tokenRes.json()) as { access_token: string; token_type: string };
@@ -74,6 +82,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   let roles: string[] = [];
   let isMember = true;
   let canEdit = true;
+  // 所属を確かめられなかったとき (Discord の障害・制限など) は、通さない。確かめずに通すと、誰でも編集できてしまう
+  let verifyFailed = false;
 
   if (env.DISCORD_GUILD_ID) {
     // ユーザーのアクセストークンでギルドメンバー情報を取得
@@ -99,7 +109,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       }
     } else {
       // ボットトークンがある場合のフォールバック検証
-      if (env.DISCORD_BOT_TOKEN) {
+      if (!env.DISCORD_BOT_TOKEN) {
+        verifyFailed = true;
+      } else {
         const botMemberRes = await fetch(
           `https://discord.com/api/v10/guilds/${env.DISCORD_GUILD_ID}/members/${user.id}`,
           {
@@ -114,12 +126,18 @@ export const onRequest: PagesFunction<Env> = async (context) => {
           if (env.DISCORD_REQUIRED_ROLE_ID) {
             canEdit = roles.includes(env.DISCORD_REQUIRED_ROLE_ID);
           }
-        } else {
+        } else if (botMemberRes.status === 404) {
           isMember = false;
           canEdit = false;
+        } else {
+          verifyFailed = true;
         }
       }
     }
+  }
+
+  if (verifyFailed) {
+    return errorResponse('Discord での所属の確認ができませんでした。しばらくしてから、もう一度ログインしてください。', 503);
   }
 
   if (!isMember) {
@@ -130,7 +148,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 <head><meta charset="utf-8"><title>認証エラー - TORO Server Wiki</title></head>
 <body style="font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6;">
   <h2>TORO Server の Discord への参加が必要です</h2>
-  <p>こんにちは、<strong>${user.global_name || user.username}</strong> さん。</p>
+  <p>こんにちは、<strong>${escapeHtml(user.global_name || user.username)}</strong> さん。</p>
   <p>Wiki の編集には TORO Server の公式 Discord サーバーへの参加が必要です。</p>
   <p><a href="${inviteUrl}" target="_blank" style="display: inline-block; padding: 10px 18px; background: #5865F2; color: #fff; text-decoration: none; border-radius: 4px;">TORO Server Discord に参加する</a></p>
   <p><a href="/wiki">Wiki トップへ戻る</a></p>
@@ -158,12 +176,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   const jwt = await signJwt(session as unknown as Record<string, unknown>, env.JWT_SECRET);
   const cookie = buildSessionCookie(jwt, env.COOKIE_DOMAIN);
 
-  const destination = new URL(returnTo, url.origin).toString();
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: destination,
-      'Set-Cookie': cookie,
-    },
-  });
+  const headers = new Headers({ Location: returnTo });
+  headers.append('Set-Cookie', cookie);
+  // 使い終わった state の目印を消す
+  headers.append('Set-Cookie', 'wiki_oauth_state=; Path=/api/auth; HttpOnly; Secure; SameSite=Lax; Max-Age=0');
+  return new Response(null, { status: 302, headers });
 };

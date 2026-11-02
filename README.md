@@ -51,6 +51,7 @@ Discord 認証に紐づく Bearer トークンを用いて、各種生成 AI ア
 npm ci
 npm start          # docs/ を変換して、開発サーバーを起動 (http://localhost:4200)
 npm run build      # dist/toro-website/browser に静的サイトを書き出す
+npm test           # ログイン・編集 API (functions/) の安全確認のテスト
 ```
 
 - `scripts/build-content.mjs` — `docs/` の Markdown を HTML にして、`public/content/` (ページの JSON・全文検索の索引)、`feed.xml`、`sitemap.xml` を作ります。`npm start` / `npm run build` の前に自動で動きます。
