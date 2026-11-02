@@ -29,7 +29,7 @@ export interface GitHubFileResult {
 
 export async function getGitHubFile(env: Env, filePath: string): Promise<GitHubFileResult | null> {
   const owner = env.GITHUB_OWNER || 'TORO-Server';
-  const repo = env.GITHUB_REPO || 'TORO-Wiki-Site';
+  const repo = env.GITHUB_REPO || 'TORO-Wiki';
   const branch = env.GITHUB_BRANCH || 'main';
 
   // パスの正規化 (docs/ から始まるように保証)
@@ -81,7 +81,7 @@ export async function commitGitHubFile(
   options: CommitFileOptions
 ): Promise<{ commitSha: string; contentSha: string }> {
   const owner = env.GITHUB_OWNER || 'TORO-Server';
-  const repo = env.GITHUB_REPO || 'TORO-Wiki-Site';
+  const repo = env.GITHUB_REPO || 'TORO-Wiki';
   const branch = env.GITHUB_BRANCH || 'main';
 
   let cleanPath = options.path.replace(/^\/+/, '');

@@ -1,6 +1,6 @@
 // Wiki (docs/) の分類と、サイト全体の設定
 export const SITE_URL = 'https://wiki.torosaba.net';
-export const REPO = 'TORO-Server/TORO-Wiki-Site';
+export const REPO = 'TORO-Server/TORO-Wiki';
 export const BRANCH = 'main';
 
 export const CATEGORIES = [
