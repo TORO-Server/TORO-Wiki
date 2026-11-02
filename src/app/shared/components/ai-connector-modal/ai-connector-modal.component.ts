@@ -1,12 +1,13 @@
-import { Component, PLATFORM_ID, inject, input, output, signal } from '@angular/core';
+import { Component, PLATFORM_ID, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthService, ConnectorInfo } from '../../../core/auth';
 import { Icon } from '../../../core/icons';
+import { Dialog } from '../../dialog';
 
 @Component({
   selector: 'app-ai-connector-modal',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [CommonModule, Icon, Dialog],
   templateUrl: './ai-connector-modal.component.html',
   styleUrl: './ai-connector-modal.component.scss',
 })
@@ -22,6 +23,13 @@ export class AiConnectorModalComponent {
   protected readonly copiedField = signal<string | null>(null);
   protected readonly activeTab = signal<'claude' | 'chatgpt' | 'gemini'>('claude');
 
+  constructor() {
+    // 開いたとき (ログイン済みなら) トークンを発行する。これまで誰も onOpen() を呼んでおらず、ログインしていても中身が空だった
+    effect(() => {
+      if (this.isOpen() && this.auth.user()) untracked(() => void this.onOpen());
+    });
+  }
+
   async onOpen() {
     if (!this.browser) return;
     this.loading.set(true);
@@ -33,15 +41,26 @@ export class AiConnectorModalComponent {
     }
   }
 
-  copyText(text: string, fieldName: string) {
+  async copyText(text: string, fieldName: string) {
     if (!this.browser) return;
-    void navigator.clipboard.writeText(text);
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // クリップボードを使えない環境 (http など) では、文字を選んでコピーしてもらう
+      this.copiedField.set(null);
+      return;
+    }
     this.copiedField.set(fieldName);
     setTimeout(() => {
       if (this.copiedField() === fieldName) {
         this.copiedField.set(null);
       }
     }, 2000);
+  }
+
+  /** https://auth.torosaba.net のような API の根 (openapi.json の URL から /api/openapi.json を除く) */
+  get apiBase(): string {
+    return this.info()?.connectors.chatgpt.schema_url.replace(/\/api\/openapi\.json\$/, '') ?? '';
   }
 
   get claudeConfigJson(): string {

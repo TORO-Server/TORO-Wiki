@@ -88,8 +88,10 @@ export class AuthService {
   async logout(): Promise<void> {
     if (!this.browser) return;
     try {
+      // Accept を付けると、リダイレクトではなく JSON で答えてくれる
       await fetch(`${AUTH_BASE_URL}/api/auth/logout`, {
         method: 'POST',
+        headers: { Accept: 'application/json' },
         credentials: 'include',
       });
     } catch {

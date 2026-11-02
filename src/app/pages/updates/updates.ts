@@ -72,7 +72,7 @@ export class Updates {
   protected readonly index = resource({ loader: () => this.content.index() });
 
   private readonly sorted = computed(() =>
-    (this.index.value()?.pages ?? [])
+    ((this.index.hasValue() ? this.index.value() : undefined)?.pages ?? [])
       .filter((p) => p.updated && !p.hidden)
       .sort((a, b) => b.updated!.localeCompare(a.updated!)),
   );
@@ -94,6 +94,6 @@ export class Updates {
   }
 
   protected label(id: string) {
-    return this.index.value()?.categories.find((c) => c.id === id)?.label ?? id;
+    return (this.index.hasValue() ? this.index.value() : undefined)?.categories.find((c) => c.id === id)?.label ?? id;
   }
 }

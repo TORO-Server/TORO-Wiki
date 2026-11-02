@@ -1,6 +1,6 @@
 @if (isOpen()) {
-  <div class="editor-backdrop" (click)="onClose()">
-    <div class="editor-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+  <div class="editor-backdrop" (click)="onBackdrop()">
+    <div class="editor-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="editor-title" appDialog (dialogClose)="onClose()">
       <!-- Windows XP スタイル タイトルバー -->
       <div class="window-titlebar">
         <div class="window-title" id="editor-title">
@@ -129,7 +129,12 @@
         </div>
 
         <div class="footer-actions">
-          <span class="path-hint">{{ path() }}</span>
+          <span class="path-hint" [class.dirty]="dirty()">
+            @if (dirty()) {
+              <b>● 未保存の変更あり</b> ·
+            }
+            {{ charCount() }} 文字 · {{ path() }}
+          </span>
           <button type="button" class="xp-btn" (click)="onClose()" [disabled]="saving()">閉じる</button>
 
           @if (!auth.user()) {
@@ -144,7 +149,8 @@
               type="button"
               class="xp-btn xp-btn-primary"
               (click)="save()"
-              [disabled]="loading() || saving() || !auth.user()?.can_edit"
+              [disabled]="!canSave()"
+              title="Ctrl + S でも保存できます"
             >
               @if (saving()) {
                 <span>保存中…</span>

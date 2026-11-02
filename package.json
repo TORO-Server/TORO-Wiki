@@ -9,7 +9,8 @@
     "start": "ng serve",
     "prebuild": "npm run content",
     "build": "ng build",
-    "postbuild": "node scripts/postbuild.mjs"
+    "postbuild": "node scripts/postbuild.mjs",
+    "test": "node --test \"functions/api/lib/*.test.ts\""
   },
   "private": true,
   "packageManager": "npm@11.19.1",

@@ -151,10 +151,95 @@
   }
 }
 
-.search {
-  display: flex;
+.search-wrap {
+  position: relative;
   margin-left: auto;
   width: min(260px, 30vw);
+}
+
+// 検索の候補 (ページ名)
+.suggest {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  width: min(440px, 92vw);
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  background: var(--paper);
+  border: 1px solid #003c74;
+  box-shadow: 2px 4px 10px rgb(0 0 0 / 0.4);
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.4;
+
+  li a {
+    display: grid;
+    gap: 1px;
+    padding: 6px 10px;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .s-title {
+    font-weight: 700;
+  }
+
+  .s-note {
+    overflow: hidden;
+    color: var(--ink-3);
+    font-size: 0.78rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  li.active a,
+  li a:hover {
+    background: var(--xp-select);
+    color: #fff;
+
+    .s-note {
+      color: rgb(255 255 255 / 0.8);
+    }
+  }
+
+  .full-text {
+    margin-top: 2px;
+    border-top: 1px solid var(--line);
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+  }
+
+  kbd {
+    padding: 0 5px;
+    border: 1px solid currentcolor;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.72rem;
+    opacity: 0.7;
+  }
+}
+
+.linklike {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.search {
+  display: flex;
+  width: 100%;
 
   input {
     flex: 1;
@@ -445,6 +530,21 @@ main {
   color: var(--ink-3);
 }
 
+// 場所の表示は、ブランド名と重ならない広さがあるときだけ
+@media (max-width: 1480px) {
+  .map-indicator {
+    display: none;
+  }
+}
+
+// 狭い画面では、検索欄がつぶれないよう、AI コネクタとログインはメニューの中だけにする
+@media (max-width: 700px) {
+  .ai-btn,
+  .user-menu-wrap {
+    display: none;
+  }
+}
+
 @media (max-width: 996px) {
   .map-indicator {
     display: none;
@@ -513,9 +613,21 @@ main {
     height: 40px;
   }
 
-  .search {
+  .search-wrap {
     width: auto;
     flex: 1;
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .suggest {
+    left: 0;
+    right: auto;
+    width: calc(100vw - 16px);
+  }
+
+  .search {
+    width: 100%;
     min-width: 0;
 
     input {

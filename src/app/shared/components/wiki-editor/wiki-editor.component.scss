@@ -13,6 +13,7 @@
 .editor-window {
   width: min(1200px, 96vw);
   height: min(850px, 92vh);
+  height: min(850px, 92dvh);
   background: #ece9d8;
   border: 2px solid #0055ea;
   border-radius: 8px 8px 4px 4px;
@@ -300,6 +301,10 @@
       font-size: 11px;
       color: #666;
       font-family: monospace;
+
+      &.dirty b {
+        color: #b04a00;
+      }
     }
   }
 }

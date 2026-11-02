@@ -19,15 +19,18 @@ export class WikiIndexPage {
   private readonly content = inject(ContentService);
   private readonly router = inject(Router);
   protected readonly site = SITE;
+  /** "TORO-Server/..." (リンクの文字。リポジトリ名が変わっても、リンク先とずれないよう SITE から作る) */
+  protected readonly repoName = SITE.repo.replace(/^https:\/\/github\.com\//, '');
   protected readonly icon = CATEGORY_ICON;
   protected readonly filter = signal('');
 
   protected readonly index = resource({ loader: () => this.content.index() });
 
-  protected readonly visible = computed(() => (this.index.value()?.pages ?? []).filter((p) => !p.hidden));
+  protected readonly data = computed(() => (this.index.hasValue() ? this.index.value() : undefined));
+  protected readonly visible = computed(() => (this.data()?.pages ?? []).filter((p) => !p.hidden));
 
   protected readonly groups = computed(() => {
-    const idx = this.index.value();
+    const idx = this.data();
     if (!idx) return [];
     const f = norm(this.filter().trim());
     return idx.categories

@@ -4,8 +4,9 @@ import { ContentService, SearchEntry } from '../../core/content';
 import { Icon } from '../../core/icons';
 import { Seo } from '../../core/seo';
 
+/** 全角・半角、大文字・小文字の違いを無くす */
 const norm = (s: string) => s.normalize('NFKC').toLowerCase();
-const escapeHtml = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 interface Hit {
   entry: SearchEntry;
@@ -13,7 +14,31 @@ interface Hit {
   snippet: string;
 }
 
-/** 本文も含めた全文検索。データ (search.json) はこのページを開いたときに読む */
+interface Prepared {
+  entry: SearchEntry;
+  t: string;
+  x: string;
+}
+
+/**
+ * norm() した文字列と、その 1 文字 1 文字が元の文字列の何文字目にあたるか。
+ * NFKC で長さが変わる文字 (「㈱」→「(株)」、「ｱ」→「ア」など) があっても、見つけた場所を元の文字列に戻せる。
+ */
+function foldWithMap(raw: string) {
+  let folded = '';
+  const map: number[] = [];
+  for (let i = 0; i < raw.length; ) {
+    const ch = String.fromCodePoint(raw.codePointAt(i)!);
+    const f = norm(ch);
+    for (let k = 0; k < f.length; k++) map.push(i);
+    folded += f;
+    i += ch.length;
+  }
+  map.push(raw.length);
+  return { folded, map };
+}
+
+/** 本文全文の検索。データ (search.json) はこのページを開いたときに読む */
 @Component({
   selector: 'app-search',
   imports: [RouterLink, Icon],
@@ -27,11 +52,14 @@ interface Hit {
       </form>
 
       @if (data.status() === 'error') {
-        <p class="sheet note">検索のデータを読み込めませんでした。ネットワークにつながっているか確かめて、もう一度お試しください。</p>
+        <p class="sheet note">
+          検索のデータを読み込めませんでした。ネットワークにつながっているか確かめて、もう一度お試しください。
+          <button type="button" class="btn" (click)="data.reload()">再読み込み</button>
+        </p>
       } @else if (!data.hasValue()) {
-        <p class="sheet note">検索の準備をしています…</p>
+        <p class="sheet note" aria-live="polite">検索の準備をしています…</p>
       } @else if (terms().length) {
-        <p class="count">「{{ text().trim() }}」の検索結果: {{ hits().length }} 件</p>
+        <p class="count" aria-live="polite">「{{ text().trim() }}」の検索結果: {{ hits().length }}{{ capped() ? ' 件以上 (上位 100 件を表示)' : ' 件' }}</p>
         <ol class="hits">
           @for (h of hits(); track h.entry.s) {
             <li class="sheet">
@@ -42,6 +70,8 @@ interface Hit {
             <li class="sheet note">見つかりませんでした。言葉を短くするか、<a routerLink="/wiki">ページ一覧</a>から探してみてください。</li>
           }
         </ol>
+      } @else {
+        <p class="sheet note">探したい言葉を入れてください。空白で区切ると、すべての言葉を含むページを探します。</p>
       }
     </div>
   `,
@@ -76,28 +106,40 @@ export class Search {
 
   protected readonly terms = computed(() => norm(this.text()).split(/\s+/).filter(Boolean));
 
-  protected readonly hits = computed<Hit[]>(() => {
+  /** 検索のたびに全ページを norm() し直さないよう、データを読んだときに 1 回だけ作る */
+  private readonly prepared = computed<Prepared[]>(() =>
+    this.data.hasValue() ? this.data.value().map((entry) => ({ entry, t: norm(entry.t), x: norm(entry.x) })) : [],
+  );
+
+  private readonly scored = computed(() => {
     const terms = this.terms();
-    const data = this.data.hasValue() ? this.data.value() : undefined;
-    if (!terms.length || !data) return [];
-    const out: Hit[] = [];
-    for (const entry of data) {
-      const t = norm(entry.t);
-      const x = norm(entry.x);
+    if (!terms.length) return [];
+    const out: { p: Prepared; score: number }[] = [];
+    for (const p of this.prepared()) {
       let score = 0;
       let ok = true;
       for (const term of terms) {
-        const inTitle = t.includes(term);
-        const at = x.indexOf(term);
+        const inTitle = p.t.includes(term);
+        const at = p.x.indexOf(term);
         if (!inTitle && at < 0) {
           ok = false;
           break;
         }
-        score += (inTitle ? 20 : 0) + (t === term ? 50 : 0) + (at >= 0 ? 1 + Math.min(10, x.split(term).length - 1) : 0);
+        score += (inTitle ? 20 : 0) + (p.t === term ? 50 : 0) + (at >= 0 ? 1 + Math.min(10, p.x.split(term).length - 1) : 0);
       }
-      if (ok) out.push({ entry, score, snippet: this.snippet(entry.x, x, terms) });
+      if (ok) out.push({ p, score });
     }
-    return out.sort((a, b) => b.score - a.score).slice(0, 100);
+    return out.sort((a, b) => b.score - a.score);
+  });
+
+  protected readonly capped = computed(() => this.scored().length > 100);
+
+  /** 見せる分 (上位 100 件) だけ、抜粋を作る */
+  protected readonly hits = computed<Hit[]>(() => {
+    const terms = this.terms();
+    return this.scored()
+      .slice(0, 100)
+      .map(({ p, score }) => ({ entry: p.entry, score, snippet: this.snippet(p.entry.x, terms) }));
   });
 
   constructor() {
@@ -110,16 +152,41 @@ export class Search {
     void this.router.navigate([], { queryParams: { q: this.text().trim() || null }, replaceUrl: true });
   }
 
-  /** 最初に見つかった所の前後を切り出して、言葉を <mark> で囲む */
-  private snippet(raw: string, normalized: string, terms: string[]) {
-    // NFKC で長さが変わる文字は少ないので、正規化後の位置をそのまま使う
-    const at = terms.map((t) => normalized.indexOf(t)).find((i) => i >= 0) ?? 0;
-    const start = Math.max(0, at - 50);
-    let s = escapeHtml(raw.slice(start, start + 160));
+  /** 最初に見つかった所の前後を切り出して、言葉を <mark> で囲む。元の文字を 1 文字ずつ HTML にするので、&lt; などを壊さない */
+  private snippet(raw: string, terms: string[]) {
+    const { folded, map } = foldWithMap(raw);
+    const firstAt = terms.map((t) => folded.indexOf(t)).filter((i) => i >= 0);
+    const at = firstAt.length ? Math.min(...firstAt) : 0;
+    const from = Math.max(0, at - 50);
+    const to = Math.min(folded.length, from + 160);
+
+    // 窓の中で言葉が見つかった範囲 (元の文字列の位置) を集めて、重なるものはまとめる
+    const ranges: [number, number][] = [];
     for (const t of terms) {
-      const re = new RegExp(escapeHtml(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-      s = s.replace(re, (m) => `<mark>${m}</mark>`);
+      for (let i = folded.indexOf(t, from); i >= 0 && i < to; i = folded.indexOf(t, i + t.length)) {
+        ranges.push([map[i], map[Math.min(i + t.length, folded.length)]]);
+      }
     }
-    return (start > 0 ? '…' : '') + s + (start + 160 < raw.length ? '…' : '');
+    ranges.sort((a, b) => a[0] - b[0]);
+    const merged: [number, number][] = [];
+    for (const r of ranges) {
+      const last = merged.at(-1);
+      if (last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+      else merged.push([...r]);
+    }
+
+    const start = map[from];
+    const end = map[to];
+    let html = '';
+    let pos = start;
+    for (const [a, b] of merged) {
+      if (b <= start || a >= end) continue;
+      const aa = Math.max(a, start);
+      const bb = Math.min(b, end);
+      html += escapeHtml(raw.slice(pos, aa)) + '<mark>' + escapeHtml(raw.slice(aa, bb)) + '</mark>';
+      pos = bb;
+    }
+    html += escapeHtml(raw.slice(pos, end));
+    return (start > 0 ? '…' : '') + html + (end < raw.length ? '…' : '');
   }
 }

@@ -1,6 +1,6 @@
 @if (isOpen()) {
   <div class="modal-backdrop" (click)="close.emit()">
-    <div class="modal-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-window" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title" appDialog (dialogClose)="close.emit()">
       <!-- タイトルバー -->
       <div class="window-titlebar">
         <div class="window-title" id="modal-title">
@@ -143,8 +143,9 @@
                 <div class="code-header">
                   <span>curl 実行例 (ページ取得)</span>
                 </div>
-                <pre><code>curl -H "Authorization: Bearer {{ data.token }}" \
-     "{{ data.connectors.chatgpt.schema_url | slice:0:-18 }}/api/docs/raw?slug=ルール"</code></pre>
+                <pre><code>curl -G -H "Authorization: Bearer {{ data.token }}" \
+     --data-urlencode "path=docs/01_Guide/ルール.md" \
+     "{{ apiBase }}/api/docs/raw"</code></pre>
               </div>
             </section>
           }

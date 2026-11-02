@@ -4,17 +4,18 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth';
 import { ContentService } from '../../core/content';
-import { JaDatePipe } from '../../core/format';
+import { JaDatePipe, safeDecode } from '../../core/format';
 import { Icon } from '../../core/icons';
 import { Seo } from '../../core/seo';
 import { SITE } from '../../core/site';
+import { UiState } from '../../core/ui';
 import { CATEGORY_ICON } from '../../shared/categories';
+import { Dialog } from '../../shared/dialog';
 import { WikiEditorComponent } from '../../shared/components/wiki-editor/wiki-editor.component';
-import { EditGuideModalComponent } from '../../shared/components/edit-guide-modal/edit-guide-modal.component';
 
 @Component({
   selector: 'app-wiki-page',
-  imports: [RouterLink, Icon, JaDatePipe, WikiEditorComponent, EditGuideModalComponent],
+  imports: [RouterLink, Icon, JaDatePipe, WikiEditorComponent, Dialog],
   templateUrl: './wiki-page.html',
   styleUrl: './wiki-page.scss',
 })
@@ -22,6 +23,7 @@ export class WikiPageView {
   readonly slug = input.required<string>();
 
   protected readonly auth = inject(AuthService);
+  private readonly ui = inject(UiState);
   private readonly content = inject(ContentService);
   private readonly router = inject(Router);
   private readonly sanitizer = inject(DomSanitizer);
@@ -32,8 +34,13 @@ export class WikiPageView {
   protected readonly site = SITE;
   protected readonly icon = CATEGORY_ICON;
   protected readonly isEditorOpen = signal<boolean>(false);
-  protected readonly isGuideOpen = signal<boolean>(false);
   protected readonly mobileTocOpen = signal<boolean>(false);
+  /** 本文の画像を大きく見ているとき */
+  protected readonly lightbox = signal<{ src: string; alt: string } | null>(null);
+  /** いま読んでいる見出し (目次で強調する) */
+  protected readonly activeHeading = signal<string>('');
+
+  protected readonly decodedSlug = computed(() => safeDecode(this.slug()));
 
   protected readonly index = resource({ loader: () => this.content.index() });
   protected readonly page = resource({
@@ -49,6 +56,12 @@ export class WikiPageView {
   protected readonly html = computed(() => {
     const p = this.current();
     return p ? this.sanitizer.bypassSecurityTrustHtml(p.html) : '';
+  });
+
+  /** 本文に文字も画像も無いページ (旧 Wiki から引き継いだときに空だったもの) */
+  protected readonly isEmpty = computed(() => {
+    const p = this.current();
+    return !!p && !/<(img|iframe|video|table)\b/i.test(p.html) && !p.html.replace(/<[^>]*>/g, '').trim();
   });
 
   protected readonly category = computed(() => {
@@ -78,18 +91,32 @@ export class WikiPageView {
 
   protected readonly toc = computed(() => (this.current()?.toc ?? []).filter((t) => t.depth >= 2 && t.depth <= 3));
 
+  /** 見つからないページの名前に近いページ (「もしかして」) */
+  protected readonly similar = computed(() => {
+    const idx = this.idx();
+    if (!idx || this.current() || this.page.status() !== 'resolved') return [];
+    const q = safeDecode(this.slug()).normalize('NFKC').toLowerCase().replace(/[_\s]+/g, '');
+    if (!q) return [];
+    return idx.pages
+      .filter((p) => !p.hidden)
+      .map((p) => {
+        const t = p.title.normalize('NFKC').toLowerCase().replace(/[_\s]+/g, '');
+        const score = t.includes(q) || q.includes(t) ? 2 : [...q].filter((ch) => t.includes(ch)).length / Math.max(q.length, 1);
+        return { p, score };
+      })
+      .filter((x) => x.score >= 0.6)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map((x) => x.p);
+  });
+
   protected readonly editUrl = computed(() => `${SITE.repo}/edit/main/${this.current()?.source}`);
   protected readonly historyUrl = computed(() => `${SITE.repo}/commits/main/${this.current()?.source}`);
 
   constructor() {
     effect(() => {
       const rawSlug = this.slug();
-      let decodedSlug = rawSlug;
-      try {
-        decodedSlug = decodeURIComponent(rawSlug);
-      } catch {
-        // ignore
-      }
+      const decodedSlug = safeDecode(rawSlug);
       const p = this.current();
       const summary = this.idx()?.pages.find((x) => x.slug === rawSlug || x.slug === decodedSlug);
       if (p) {
@@ -106,12 +133,72 @@ export class WikiPageView {
       }
     });
 
+    // ページを替えたら、開いていたものを閉じる
+    effect(() => {
+      this.slug();
+      this.lightbox.set(null);
+      this.mobileTocOpen.set(false);
+      this.activeHeading.set('');
+    });
+
     // 本文を描いたあとに、URL の #見出し まで動かす (本文は非同期に届くため)
     afterRenderEffect(() => {
       const p = this.current();
       if (!p || !this.browser || !location.hash) return;
-      const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-      el?.scrollIntoView();
+      document.getElementById(safeDecode(location.hash.slice(1)))?.scrollIntoView();
+    });
+
+    // コードブロックに「コピー」ボタンを付ける
+    afterRenderEffect(() => {
+      this.current();
+      const root = this.article()?.nativeElement;
+      if (!root || !this.browser) return;
+      for (const pre of Array.from(root.querySelectorAll('pre'))) {
+        if (pre.parentElement?.classList.contains('code-block')) continue;
+        const wrap = document.createElement('div');
+        wrap.className = 'code-block';
+        pre.replaceWith(wrap);
+        wrap.append(pre);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = 'コピー';
+        btn.setAttribute('aria-label', 'このコードをコピー');
+        wrap.append(btn);
+      }
+    });
+
+    // いま読んでいる見出し (画面の上の端を通り過ぎた、いちばん最後のもの) を、目次で強調する。
+    // IntersectionObserver だと、目次のリンクなどで一気に飛んだとき、途中の見出しの出入りを見逃して、強調がずれるため、スクロールで位置を測る
+    afterRenderEffect((onCleanup) => {
+      const p = this.current();
+      const root = this.article()?.nativeElement;
+      if (!p || !root || !this.browser) return;
+      const heads = Array.from(root.querySelectorAll<HTMLElement>('h2[id], h3[id]'));
+      if (!heads.length) return;
+      let frame = 0;
+      const update = () => {
+        frame = 0;
+        // 固定のヘッダーの下に隠れないよう、その分 (と少し) 下を基準にする
+        const line = 110;
+        let current = '';
+        for (const h of heads) {
+          if (h.getBoundingClientRect().top <= line) current = h.id;
+          else break;
+        }
+        if (current !== this.activeHeading()) this.activeHeading.set(current);
+      };
+      const onScroll = () => {
+        if (!frame) frame = requestAnimationFrame(update);
+      };
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      onCleanup(() => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+        if (frame) cancelAnimationFrame(frame);
+      });
     });
   }
 
@@ -124,11 +211,7 @@ export class WikiPageView {
   }
 
   protected openGuide() {
-    this.isGuideOpen.set(true);
-  }
-
-  protected closeGuide() {
-    this.isGuideOpen.set(false);
+    this.ui.openGuide();
   }
 
   protected toggleMobileToc() {
@@ -137,24 +220,45 @@ export class WikiPageView {
 
   protected scrollToTop() {
     if (!this.browser) return;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
   protected onEditorSaved() {
     this.page.reload();
   }
 
-  /** 本文中のリンクを、ページを読み直さずに開く */
+  /** 本文中のリンクを、ページを読み直さずに開く。画像は大きく見せ、コードはコピーできるようにする */
   protected onArticleClick(e: MouseEvent) {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const a = (e.target as HTMLElement).closest('a');
+    const target = e.target as HTMLElement;
+
+    const copy = target.closest<HTMLButtonElement>('button.copy-btn');
+    if (copy) {
+      const code = copy.parentElement?.querySelector('pre')?.innerText ?? '';
+      void navigator.clipboard
+        ?.writeText(code.replace(/\n$/, ''))
+        .then(() => {
+          copy.textContent = 'コピーしました';
+          setTimeout(() => (copy.textContent = 'コピー'), 1500);
+        })
+        .catch(() => {
+          copy.textContent = 'コピーできません';
+          setTimeout(() => (copy.textContent = 'コピー'), 1500);
+        });
+      return;
+    }
+
+    const a = target.closest('a');
+    if (!a && target instanceof HTMLImageElement && target.src && this.article()?.nativeElement.contains(target)) {
+      this.lightbox.set({ src: target.currentSrc || target.src, alt: target.alt });
+      return;
+    }
     if (!a || a.target || !this.article()?.nativeElement.contains(a)) return;
     const href = a.getAttribute('href');
     if (!href) return;
     if (href.startsWith('#')) {
       e.preventDefault();
-      const el = document.getElementById(decodeURIComponent(href.slice(1)));
-      el?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      document.getElementById(safeDecode(href.slice(1)))?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       history.replaceState(history.state, '', location.pathname + location.search + href);
       return;
     }

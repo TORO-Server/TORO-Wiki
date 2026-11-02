@@ -80,6 +80,18 @@ const safeDecode = (s) => {
 
 const pageUrl = (slug) => `/wiki/${encodeURIComponent(slug)}`;
 
+/** 見出しと、旧 Wiki から引き継いだ手書きの「目次」を除いた、最初の文章 */
+function makeExcerpt(html) {
+  const body = html
+    .replace(/<h\d[\s\S]*?<\/h\d>/g, ' ')
+    .replace(/<a class="anchor"[^>]*>#<\/a>/g, '')
+    // 「目次」と書いた段落と、そのすぐ後ろの一覧 (リンクだけの入れ子の箇条書き) を除く
+    .replace(/<(p|strong|b)>\s*(?:<(?:strong|b)>)?\s*目次\s*(?:<\/(?:strong|b)>)?\s*<\/\1>\s*(<(ul|ol)>[\s\S]*?<\/\3>)?/g, ' ');
+  const paragraphs = [...body.matchAll(/<p[\s>][\s\S]*?<\/p>|<p>[\s\S]*?<\/p>/g)].map((m) => stripTags(m[0])).filter((t) => t.length > 1);
+  const text = paragraphs.length ? paragraphs.join(' ') : stripTags(body);
+  return text.slice(0, 140);
+}
+
 async function main() {
   const files = (await walk(DOCS)).filter((f) => toPosix(relative(DOCS, f)) !== 'README.md');
   const history = gitHistory();
@@ -187,6 +199,8 @@ async function main() {
       allowedSchemes: ['http', 'https', 'mailto', 'data'],
       transformTags: {
         a: (tag, attribs) => {
+          // href の無い <a id="..."> はリンクではなく、飛び先の目印 (seesaa から引き継いだもの)
+          if (attribs.href == null) return { tagName: 'a', attribs: { ...attribs } };
           const r = resolveUrl(page, attribs.href, 'link');
           const a = { ...attribs };
           if (r.href == null) {
@@ -203,9 +217,19 @@ async function main() {
         },
         img: (tag, attribs) => {
           const r = resolveUrl(page, attribs.src, 'image');
-          return { tagName: 'img', attribs: { ...attribs, src: r.href ?? '', loading: 'lazy', decoding: 'async' } };
+          // https のページに http の画像を置くと、ブラウザーによっては読まれないので https にする
+          const src = (r.href ?? '').replace(/^http:\/\//i, 'https://');
+          return { tagName: 'img', attribs: { ...attribs, src, loading: 'lazy', decoding: 'async', ...(r.external ? { referrerpolicy: 'no-referrer' } : {}) } };
         },
       },
+    });
+    // 同じページの中の #見出し へのリンクで、飛び先が無いもの (旧 Wiki の「S」の注記など) は、リンクをやめて文字だけにする
+    const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    html = html.replace(/<a ([^>]*?)href="#([^"]*)"([^>]*)>([\s\S]*?)<\/a>/g, (whole, before, hash, after, inner) => {
+      // 見出しの横の「#」(自分の見出しへのリンク) はそのまま
+      if (/class="anchor"/.test(before + after)) return whole;
+      const id = safeDecode(hash);
+      return !id || ids.has(id) || ids.has(hash) ? whole : `<span class="missing-link">${inner}</span>`;
     });
     html = html.replace(/<table/g, '<div class="table-wrap"><table').replace(/<\/table>/g, '</table></div>');
 
@@ -213,7 +237,7 @@ async function main() {
     page.html = html;
     page.toc = toc;
     page.text = text;
-    page.excerpt = stripTags(html.replace(/<h\d[\s\S]*?<\/h\d>/g, ' ').replace(/<a class="anchor"[^>]*>#<\/a>/g, '')).slice(0, 140);
+    page.excerpt = makeExcerpt(html);
   }
 
   const backlinks = new Map();
@@ -273,7 +297,7 @@ async function main() {
   // RSS (最近更新されたページ)
   const recent = pages.filter((p) => p.updated && !p.hidden).sort((a, b) => b.updated.localeCompare(a.updated)).slice(0, 30);
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel>
 <title>TORO Server Wiki 更新情報</title>
 <link>${SITE_URL}/updates</link>
@@ -287,7 +311,7 @@ ${recent
 <link>${SITE_URL}${pageUrl(p.slug)}</link>
 <guid isPermaLink="false">${escapeXml(p.slug)}@${p.updated}</guid>
 <pubDate>${new Date(p.updated).toUTCString()}</pubDate>
-${p.author ? `<author>${escapeXml(p.author)}</author>\n` : ''}<description>${escapeXml(p.excerpt)}</description>
+${p.author ? `<dc:creator>${escapeXml(p.author)}</dc:creator>\n` : ''}<description>${escapeXml(p.excerpt)}</description>
 </item>`,
   )
   .join('\n')}
@@ -296,10 +320,16 @@ ${p.author ? `<author>${escapeXml(p.author)}</author>\n` : ''}<description>${esc
 `;
   await writeFile(join(PUBLIC, 'feed.xml'), rss);
 
-  const urls = ['/', '/wiki', '/updates', '/map', ...pages.filter((p) => !p.hidden).map((p) => pageUrl(p.slug))];
+  const urls = [
+    { loc: '/' },
+    { loc: '/wiki' },
+    { loc: '/updates' },
+    { loc: '/map' },
+    ...pages.filter((p) => !p.hidden).map((p) => ({ loc: pageUrl(p.slug), lastmod: p.updated })),
+  ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `<url><loc>${SITE_URL}${u}</loc></url>`).join('\n')}
+${urls.map((u) => `<url><loc>${SITE_URL}${u.loc}</loc>${u.lastmod ? `<lastmod>${u.lastmod.slice(0, 10)}</lastmod>` : ''}</url>`).join('\n')}
 </urlset>
 `;
   await writeFile(join(PUBLIC, 'sitemap.xml'), sitemap);

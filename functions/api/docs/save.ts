@@ -2,6 +2,10 @@ import { Env } from '../lib/types';
 import { getSession } from '../lib/auth';
 import { commitGitHubFile } from '../lib/github';
 import { jsonResponse, errorResponse, handleCors } from '../lib/response';
+import { checkOrigin } from '../lib/security';
+
+/** 1 ページの本文の上限 (バイト)。Wiki のページとして常識外れに大きいものは受け付けない */
+const MAX_CONTENT_BYTES = 512 * 1024;
 
 export const onRequest: PagesFunction<Env> = async (context) => {
   const cors = handleCors(context.request);
@@ -9,6 +13,11 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   if (context.request.method !== 'POST' && context.request.method !== 'PUT') {
     return errorResponse('Method Not Allowed', 405);
+  }
+
+  // 別のサイトのページから、ログイン中の人の名前で書き込ませない
+  if (!checkOrigin(context.request, context.env)) {
+    return errorResponse('Origin not allowed', 403);
   }
 
   // 1. 認可検証
@@ -35,8 +44,11 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   // パスのバリデーション (ディレクトリトラバーサル防止)
-  if (path.includes('..') || path.startsWith('/') || path.includes('\\')) {
+  if (typeof path !== 'string' || path.includes('..') || path.startsWith('/') || path.includes('\\') || path.includes('\0')) {
     return errorResponse('Invalid path format', 400);
+  }
+  if (new TextEncoder().encode(content).length > MAX_CONTENT_BYTES) {
+    return errorResponse('Content is too large', 413);
   }
 
   try {
