@@ -71,11 +71,11 @@ h1 {
     align-items: center;
     gap: 4px;
     font-weight: 700;
-    color: #0b4fc7;
+    color: var(--link);
     border-color: #3c7fb1;
 
     &:hover {
-      background: #eef4ff;
+      background: var(--chip);
     }
   }
 }
@@ -193,6 +193,21 @@ h1 {
 .tasks {
   padding: 12px 10px;
   background: var(--xp-explorer);
+
+  .guide-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--xp-pane-ink);
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 
   ul {
     margin: 0;
@@ -348,7 +363,8 @@ h1 {
       padding: 0;
     }
 
-    li a {
+    li a,
+    li .guide-link {
       display: flex;
       align-items: center;
       min-height: 40px;

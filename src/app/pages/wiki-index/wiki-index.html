@@ -48,7 +48,9 @@
       </ul>
     </section>
   } @empty {
-    @if (index.value()) {
+    @if (index.status() === 'error') {
+      <p class="sheet none">ページの一覧を読み込めませんでした。ネットワークにつながっているか確かめて、もう一度お試しください。<button type="button" class="btn" (click)="index.reload()">再読み込み</button></p>
+    } @else if (data()) {
       <p class="sheet none">「{{ filter() }}」を含むページ名はありません。<a routerLink="/search" [queryParams]="{ q: filter() }">本文から検索</a>してみてください。</p>
     }
   }
@@ -57,7 +59,7 @@
     <h2>Wiki を編集するには</h2>
     <p>
       この Wiki は GitHub の
-      <a [href]="site.repo" target="_blank" rel="noopener">TORO-Server/TORO-Website</a>
+      <a [href]="site.repo" target="_blank" rel="noopener">{{ repoName }}</a>
       にある Markdown で書かれています。各ページの「編集」から変更を提案できます。
     </p>
   </aside>

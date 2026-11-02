@@ -20,7 +20,7 @@
       <div class="actions">
         <a class="btn primary" routerLink="/wiki">ページ一覧</a>
         <a class="btn" routerLink="/updates">更新履歴</a>
-        <button class="btn edit-guide-btn" type="button" (click)="isGuideOpen.set(true)">
+        <button class="btn edit-guide-btn" type="button" (click)="ui.openGuide()">
           <app-icon name="edit" /> 記事の編集方法
         </button>
         <button class="btn" type="button" (click)="random()">ランダムなページ</button>
@@ -59,9 +59,7 @@
         <div class="pane-body">
           <ul>
             <li>
-              <a (click)="isGuideOpen.set(true)" style="cursor: pointer; font-weight: bold; color: #0b4fc7;">
-                ★ 記事の編集方法 (Web / GitHub)
-              </a>
+              <button type="button" class="guide-link" (click)="ui.openGuide()">★ 記事の編集方法 (Web / GitHub)</button>
             </li>
             <li><a [routerLink]="['/wiki', 'ルール']">ルール</a></li>
             <li><a [routerLink]="['/wiki', '利用規約']">利用規約</a></li>
@@ -112,4 +110,3 @@
   </div>
 </div>
 
-<app-edit-guide-modal [isOpen]="isGuideOpen()" (close)="isGuideOpen.set(false)" />

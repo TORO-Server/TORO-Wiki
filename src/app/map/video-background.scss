@@ -118,6 +118,11 @@ video,
   --col-delay: 0ms;
 }
 
+// 開ききったあとは描かない (タイルの縁が残って見えたり、描画の負担になるのを防ぐ)
+.shutter-cover.is-done {
+  visibility: hidden;
+}
+
 // 切替時: シャッターが高速に閉じて画面を覆う
 .shutter-cover.is-switching .shutter-tile {
   transform: rotateX(0deg);

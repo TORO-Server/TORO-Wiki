@@ -3,9 +3,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { MapStage } from './map-stage';
 import { BackgroundManifest, Poi } from './map-types';
 
+/** 動画が再生を始めるまで待つ長さ。これを過ぎたら、動画をあきらめて一枚絵にする (遅い回線や壊れたファイルで、画面が暗いままにならないように) */
+const PLAY_TIMEOUT = 8000;
+
 /**
  * デスクトップの壁紙およびマップ動画演出。
- * カスケーディング 3D グリッドタイル シャッターによってマップ動画が登場・切り替わる。
+ * カスケーディング 3D グリッドタイル シャッターによってマップ動画が切り替わる。
  */
 @Component({
   selector: 'app-video-background',
@@ -20,6 +23,7 @@ import { BackgroundManifest, Poi } from './map-types';
         aria-hidden="true"
         [class.on]="front() === $index && ready()"
         (ended)="onEnded($index)"
+        (error)="onError($index)"
       ></video>
     }
     @if (still(); as poster) {
@@ -28,7 +32,7 @@ import { BackgroundManifest, Poi } from './map-types';
     <div class="veil"></div>
 
     <!-- グリッドタイル シャッターカバー -->
-    <div class="shutter-cover" [class.is-open]="shutterOpen()" [class.is-switching]="switching()" aria-hidden="true">
+    <div class="shutter-cover" [class.is-open]="shutterOpen()" [class.is-switching]="switching()" [class.is-done]="done()" aria-hidden="true">
       @for (r of rows(); track r) {
         <ul class="shutter-tile-row" [style.--row-index]="r">
           @for (c of cols; track c) {
@@ -39,7 +43,11 @@ import { BackgroundManifest, Poi } from './map-types';
     </div>
   `,
   styleUrl: './video-background.scss',
-  host: { '[attr.data-mode]': 'stage.mode()' },
+  host: {
+    '[attr.data-mode]': 'stage.mode()',
+    '(window:resize)': 'updateGridRows()',
+    '(document:visibilitychange)': 'onVisibility()',
+  },
 })
 export class VideoBackground {
   protected readonly stage = inject(MapStage);
@@ -51,19 +59,22 @@ export class VideoBackground {
 
   protected readonly front = signal(0);
   protected readonly ready = signal(false);
-  protected readonly shutterOpen = signal(false);
+  /** 最初は開いた状態 (タイルは見えない)。切り替えの間だけ閉じる。閉じたまま始めると、動画が来るまで画面が真っ暗になる */
+  protected readonly shutterOpen = signal(true);
   protected readonly switching = signal(false);
+  /** シャッターが開ききったあと。タイルを描かないようにする */
+  protected readonly done = signal(true);
   /** 動画を流さないとき (動きを減らす設定・省データ) の一枚絵 */
   protected readonly still = signal<string | null>(null);
   private motion = true;
   private shownIndex = -1;
+  /** show() を呼ぶたびに増やす。前の呼び出しの待ち (canplay や timeout) が、あとから効いてしまわないように */
+  private seq = 0;
+  private doneTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     afterNextRender(() => {
       this.updateGridRows();
-      if (typeof window !== 'undefined') {
-        window.addEventListener('resize', () => this.updateGridRows());
-      }
       void this.start();
     });
 
@@ -77,18 +88,18 @@ export class VideoBackground {
     });
   }
 
-  private updateGridRows() {
+  protected updateGridRows() {
     if (!isPlatformBrowser(this.platformId) || typeof window === 'undefined') return;
     const tileH = 46;
     const count = Math.min(28, Math.max(8, Math.ceil(window.innerHeight / tileH)));
-    const arr = Array.from({ length: count }, (_, i) => i);
-    this.rows.set(arr);
+    if (count !== this.rows().length) this.rows.set(Array.from({ length: count }, (_, i) => i));
   }
 
   private async start() {
     const manifest = (await fetch('/background/background.json')
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null)) as BackgroundManifest | null;
+    // 動画の一覧を読めなかったら、青い壁紙のまま
     if (!manifest?.pois.length) return;
     const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
     this.motion = !matchMedia('(prefers-reduced-motion: reduce)').matches && !nav.connection?.saveData;
@@ -103,21 +114,43 @@ export class VideoBackground {
     return `/background/${av1 ? poi.av1 : poi.h264}`;
   }
 
+  /** 動画をあきらめて、一枚絵を出す。シャッターは開けておく */
+  private fallback(poi: Poi) {
+    this.motion = false;
+    this.still.set(`/background/${poi.poster}`);
+    this.openShutter(0);
+  }
+
+  private openShutter(delay: number) {
+    setTimeout(() => {
+      this.switching.set(false);
+      this.shutterOpen.set(true);
+      // タイルがすべてめくれ終わったら、描くのをやめる
+      clearTimeout(this.doneTimer);
+      this.doneTimer = setTimeout(() => this.done.set(true), 3600);
+    }, delay);
+  }
+
   private show(poi: Poi, i: number) {
     const isFirst = this.shownIndex === -1;
     this.shownIndex = i;
+    const seq = ++this.seq;
 
     if (!this.motion) {
-      this.still.set(`/background/${poi.poster}`);
-      this.shutterOpen.set(true);
+      this.fallback(poi);
       return;
     }
 
     const videos = this.videos();
-    if (videos.length < 2) return;
+    if (videos.length < 2) {
+      this.fallback(poi);
+      return;
+    }
 
     // 切り替え時は一旦シャッターを閉じる
     if (!isFirst) {
+      clearTimeout(this.doneTimer);
+      this.done.set(false);
       this.switching.set(true);
       this.shutterOpen.set(false);
     }
@@ -128,26 +161,33 @@ export class VideoBackground {
     v.src = this.src(poi);
     v.currentTime = 0;
 
+    let started = false;
+    const timeout = setTimeout(() => {
+      if (seq === this.seq && !started) this.fallback(poi);
+    }, PLAY_TIMEOUT);
+
     const play = () => {
+      if (seq !== this.seq) return;
       v.play()
         .then(() => {
+          if (seq !== this.seq) return;
+          started = true;
+          clearTimeout(timeout);
+          this.still.set(null);
           this.front.set(back);
           this.ready.set(true);
-          // シャッターをめくり、新しい動画を劇的に登場させる
-          setTimeout(() => {
-            this.switching.set(false);
-            this.shutterOpen.set(true);
-          }, isFirst ? 180 : 350);
+          // シャッターをめくり、新しい動画を登場させる
+          this.openShutter(isFirst ? 180 : 350);
 
           // 後ろに回った動画は、フェード・切り替えが終わってから止める
-          setTimeout(() => videos[1 - back].nativeElement.pause(), 1600);
+          setTimeout(() => {
+            if (seq === this.seq) videos[1 - back].nativeElement.pause();
+          }, 1600);
         })
         .catch(() => {
           // 自動再生できない環境では、一枚絵にする
-          this.motion = false;
-          this.still.set(`/background/${poi.poster}`);
-          this.shutterOpen.set(true);
-          this.switching.set(false);
+          clearTimeout(timeout);
+          if (seq === this.seq) this.fallback(poi);
         });
     };
 
@@ -160,5 +200,23 @@ export class VideoBackground {
 
   protected onEnded(slot: number) {
     if (slot === this.front()) this.stage.next(1);
+  }
+
+  /** 読み込めない・壊れた動画のとき。いまの名所は飛ばして、次へ進む (全部だめなら一枚絵) */
+  protected onError(slot: number) {
+    const v = this.videos()[slot]?.nativeElement;
+    if (!v?.getAttribute('src')) return;
+    const poi = this.stage.current();
+    if (slot !== 1 - this.front() || !poi) return;
+    this.fallback(poi);
+  }
+
+  /** 見えていないタブでは、動画を止めて電池と通信を節約する */
+  protected onVisibility() {
+    if (!isPlatformBrowser(this.platformId) || !this.ready()) return;
+    const front = this.videos()[this.front()]?.nativeElement;
+    if (!front) return;
+    if (document.visibilityState === 'hidden') front.pause();
+    else void front.play().catch(() => undefined);
   }
 }

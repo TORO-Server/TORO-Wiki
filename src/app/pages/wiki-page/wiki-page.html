@@ -1,5 +1,6 @@
-<div class="layout">
+<div class="layout" [class.no-side]="!current()">
   <aside class="explorer-bar" aria-label="ページの操作と目次">
+   <div class="explorer-inner">
     @if (current(); as p) {
       <section class="xp-pane">
         <h2>ページの操作</h2>
@@ -43,7 +44,9 @@
         <div class="pane-body">
           <ol>
             @for (t of toc(); track t.id) {
-              <li [class.sub]="t.depth === 3"><a routerLink="." [fragment]="t.id">{{ t.text }}</a></li>
+              <li [class.sub]="t.depth === 3" [class.active]="t.id === activeHeading()">
+                <a routerLink="." [fragment]="t.id" [attr.aria-current]="t.id === activeHeading() ? 'location' : null">{{ t.text }}</a>
+              </li>
             }
           </ol>
         </div>
@@ -64,6 +67,7 @@
         </div>
       </section>
     }
+   </div>
   </aside>
 
   <div class="content">
@@ -126,7 +130,7 @@
 
         @if (toc().length > 2) {
           <details class="toc-mobile">
-            <summary>目次 (タップして開閉)</summary>
+            <summary>目次 ({{ toc().length }})</summary>
             <ol>
               @for (t of toc(); track t.id) {
                 <li [class.sub]="t.depth === 3"><a routerLink="." [fragment]="t.id">{{ t.text }}</a></li>
@@ -135,6 +139,11 @@
           </details>
         }
 
+        @if (isEmpty()) {
+          <p class="empty-note">
+            このページには、まだ内容がありません (旧 Wiki から引き継いだときに空でした)。知っていることがあれば、ぜひ書き足してください。
+          </p>
+        }
         <div #article class="prose" [innerHTML]="html()" (click)="onArticleClick($event)"></div>
 
         <!-- 記事下部の編集・貢献案内カード -->
@@ -191,12 +200,12 @@
         </button>
         @if (toc().length > 2) {
           <button type="button" class="mbb-item" (click)="toggleMobileToc()" aria-label="目次を開閉">
-            <app-icon name="book" />
+            <app-icon name="list" />
             <span>目次</span>
           </button>
         }
         <button type="button" class="mbb-item" (click)="openGuide()" aria-label="編集ガイド">
-          <app-icon name="network" />
+          <app-icon name="info" />
           <span>ガイド</span>
         </button>
         <button type="button" class="mbb-item" (click)="scrollToTop()" aria-label="ページ最上部へ戻る">
@@ -208,18 +217,39 @@
       <!-- モバイル用 目次ポップアップドロワー -->
       @if (mobileTocOpen() && toc().length > 2) {
         <div class="mobile-toc-drawer-backdrop" (click)="mobileTocOpen.set(false)">
-          <div class="mobile-toc-drawer xp-window" (click)="$event.stopPropagation()">
+          <div
+            class="mobile-toc-drawer xp-window"
+            role="dialog"
+            aria-modal="true"
+            aria-label="目次"
+            appDialog
+            (dialogClose)="mobileTocOpen.set(false)"
+            (click)="$event.stopPropagation()"
+          >
             <div class="xp-titlebar">
               <span class="title">目次</span>
-              <button type="button" class="close-btn" (click)="mobileTocOpen.set(false)">✕</button>
+              <button type="button" class="close-btn" aria-label="目次を閉じる" (click)="mobileTocOpen.set(false)">✕</button>
             </div>
             <ol class="drawer-toc-list">
               @for (t of toc(); track t.id) {
-                <li [class.sub]="t.depth === 3">
+                <li [class.sub]="t.depth === 3" [class.active]="t.id === activeHeading()">
                   <a routerLink="." [fragment]="t.id" (click)="mobileTocOpen.set(false)">{{ t.text }}</a>
                 </li>
               }
             </ol>
+          </div>
+        </div>
+      }
+
+      <!-- 画像を大きく見る -->
+      @if (lightbox(); as lb) {
+        <div class="lightbox" (click)="lightbox.set(null)">
+          <div class="lightbox-window" role="dialog" aria-modal="true" aria-label="画像の拡大" appDialog (dialogClose)="lightbox.set(null)" (click)="$event.stopPropagation()">
+            <img [src]="lb.src" [alt]="lb.alt" />
+            <div class="lightbox-bar">
+              <a [href]="lb.src" target="_blank" rel="noopener">元の画像を開く</a>
+              <button type="button" class="btn" (click)="lightbox.set(null)">閉じる</button>
+            </div>
           </div>
         </div>
       }
@@ -230,11 +260,6 @@
         [title]="p.title"
         (close)="closeEditor()"
         (saved)="onEditorSaved()"
-      />
-
-      <app-edit-guide-modal
-        [isOpen]="isGuideOpen()"
-        (close)="closeGuide()"
       />
     } @else if (page.status() === 'error') {
       <article class="sheet doc missing">
@@ -248,9 +273,19 @@
     } @else if (page.status() === 'resolved') {
       <article class="sheet doc missing">
         <h1>ページが見つかりません</h1>
-        <p>「{{ slug() }}」というページはまだありません。名前が変わったか、旧 Wiki にしかないのかもしれません。</p>
+        <p>「{{ decodedSlug() }}」というページはまだありません。名前が変わったか、旧 Wiki にしかないのかもしれません。</p>
+        @if (similar().length) {
+          <div class="similar">
+            <p><strong>もしかして:</strong></p>
+            <ul>
+              @for (s of similar(); track s.slug) {
+                <li><a [routerLink]="['/wiki', s.slug]">{{ s.title }}</a></li>
+              }
+            </ul>
+          </div>
+        }
         <p class="missing-actions">
-          <a class="btn" [routerLink]="['/search']" [queryParams]="{ q: slug() }">「{{ slug() }}」で検索</a>
+          <a class="btn" [routerLink]="['/search']" [queryParams]="{ q: decodedSlug() }">「{{ decodedSlug() }}」で検索</a>
           <a class="btn" routerLink="/wiki">ページ一覧</a>
         </p>
       </article>

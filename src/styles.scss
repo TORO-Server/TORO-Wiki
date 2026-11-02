@@ -37,6 +37,10 @@
   --ok: #0a8a2f;
   --ng: #cc1122;
 
+  // 部品が参照している色 (定義が無く、背景が透明になっていた)
+  --xp-bg: var(--window);
+  --accent: var(--xp-pane-ink);
+
   --header-h: 54px;
   --gutter: 15px;
 }
@@ -87,6 +91,11 @@
   box-sizing: border-box;
 }
 
+// ダイアログを開いている間は、後ろのページをスクロールさせない
+html.dialog-open {
+  overflow: hidden;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
@@ -101,11 +110,18 @@ body {
   font-family: var(--font-ui);
   font-size: 16px;
   line-height: 1.75;
-  overflow-x: hidden;
+  // hidden だと body 自体がスクロールの枠になり、中の position: sticky (ヘッダー・サイドバー) が効かなくなる。clip なら枠にならない
+  overflow-x: clip;
 }
 
 a {
   color: var(--link);
+}
+
+// 検索結果の強調など (innerHTML の中は、コンポーネントの scoped なスタイルが届かない)
+mark {
+  background: var(--mark);
+  color: inherit;
 }
 
 img {
@@ -463,6 +479,47 @@ input {
   .missing-link {
     color: var(--ink-2);
     text-decoration: underline dotted var(--ink-3);
+  }
+
+  // 画像は押すと大きく見られる
+  img {
+    cursor: zoom-in;
+  }
+
+  a > img {
+    cursor: pointer;
+  }
+
+  // コードブロックの「コピー」ボタン
+  .code-block {
+    position: relative;
+    margin: 0 0 1em;
+
+    > pre {
+      margin: 0;
+      padding-right: 4.5em;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      padding: 2px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      background: var(--paper);
+      color: var(--ink-2);
+      font-size: 0.76rem;
+      line-height: 1.6;
+      cursor: pointer;
+      opacity: 0.85;
+
+      &:hover,
+      &:focus-visible {
+        opacity: 1;
+        border-color: var(--xp-select);
+      }
+    }
   }
 
   mark {

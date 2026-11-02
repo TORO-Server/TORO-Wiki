@@ -31,20 +31,44 @@
           <a [href]="site.discord" target="_blank" rel="noopener">Discord</a>
         </nav>
 
-        <form class="search" role="search" (submit)="search($event)">
-          <label class="visually-hidden" for="site-search">Wiki を検索</label>
-          <input
-            id="site-search"
-            type="search"
-            placeholder="Wiki を検索"
-            autocomplete="off"
-            enterkeyhint="search"
-            [ngModel]="query()"
-            (ngModelChange)="query.set($event)"
-            name="q"
-          />
-          <button type="submit" aria-label="検索"><app-icon name="search" /></button>
-        </form>
+        <div class="search-wrap">
+          <form class="search" role="search" (submit)="search($event)">
+            <label class="visually-hidden" for="site-search">Wiki を検索</label>
+            <input
+              id="site-search"
+              type="search"
+              placeholder="Wiki を検索 ( / )"
+              autocomplete="off"
+              enterkeyhint="search"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="search-suggest"
+              [attr.aria-expanded]="suggestOpen()"
+              [attr.aria-activedescendant]="activeSuggestion() >= 0 ? 'suggest-' + activeSuggestion() : null"
+              [ngModel]="query()"
+              (ngModelChange)="onSearchInput($event)"
+              (focus)="onSearchFocus()"
+              (keydown)="onSearchKey($event)"
+              name="q"
+            />
+            <button type="submit" aria-label="検索"><app-icon name="search" /></button>
+          </form>
+          @if (suggestOpen()) {
+            <ul id="search-suggest" class="suggest" role="listbox" aria-label="ページ名の候補" (mousedown)="$event.preventDefault()">
+              @for (p of suggestions(); track p.slug; let i = $index) {
+                <li role="option" [id]="'suggest-' + i" [class.active]="i === activeSuggestion()" [attr.aria-selected]="i === activeSuggestion()">
+                  <a [routerLink]="['/wiki', p.slug]" (click)="openPage(p); $event.preventDefault()">
+                    <span class="s-title">{{ p.title }}</span>
+                    <span class="s-note">{{ p.excerpt }}</span>
+                  </a>
+                </li>
+              }
+              <li class="full-text" role="option" aria-selected="false">
+                <a [routerLink]="['/search']" [queryParams]="{ q: query().trim() }">「{{ query().trim() }}」を本文から検索 <kbd>Enter</kbd></a>
+              </li>
+            </ul>
+          }
+        </div>
 
         <!-- AI コネクタ ボタン -->
         <button
@@ -65,6 +89,7 @@
               type="button"
               (click)="userMenuOpen.set(!userMenuOpen())"
               [attr.aria-expanded]="userMenuOpen()"
+              aria-haspopup="menu"
               aria-label="ユーザーメニュー"
             >
               <img [src]="u.avatar_url" alt="" class="tb-avatar" />
@@ -150,7 +175,7 @@
     <footer class="statusbar">
       <span class="cell grow">
         <a routerLink="/wiki">ページ一覧</a> ・ <a routerLink="/updates">更新履歴</a> ・ <a href="/feed.xml">RSS</a> ・
-        <a (click)="openEditGuide()" style="cursor: pointer;">編集ガイド</a> ・
+        <button type="button" class="linklike" (click)="openEditGuide()">編集ガイド</button> ・
         <a [href]="site.repo" target="_blank" rel="noopener">GitHub</a> ・ <a [href]="site.seesaa" target="_blank" rel="noopener">旧 Wiki (seesaa)</a>
       </span>
       <span class="cell">
@@ -162,5 +187,5 @@
   </div>
 </div>
 
-<app-ai-connector-modal [isOpen]="aiModalOpen()" (close)="aiModalOpen.set(false)" />
-<app-edit-guide-modal [isOpen]="editGuideOpen()" (close)="editGuideOpen.set(false)" />
+<app-ai-connector-modal [isOpen]="ui.aiOpen()" (close)="ui.aiOpen.set(false)" />
+<app-edit-guide-modal [isOpen]="ui.guideOpen()" (close)="ui.guideOpen.set(false)" />
