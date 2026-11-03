@@ -4,13 +4,8 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class UiState {
   readonly guideOpen = signal(false);
-  readonly aiOpen = signal(false);
 
   openGuide() {
     this.guideOpen.set(true);
-  }
-
-  openAi() {
-    this.aiOpen.set(true);
   }
 }

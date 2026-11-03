@@ -70,16 +70,15 @@
           }
         </div>
 
-        <!-- AI コネクタ ボタン -->
-        <button
+        <!-- AI クライアントの接続方法 -->
+        <a
           class="tb-btn ai-btn"
-          type="button"
-          (click)="openAiModal()"
-          aria-label="AI コネクタ (Claude / ChatGPT / Gemini)"
-          title="AI コネクタ (Claude / ChatGPT / Gemini)"
+          [routerLink]="['/wiki', 'AIクライアントの接続方法']"
+          aria-label="AI クライアントの接続方法 (Claude / ChatGPT / Gemini)"
+          title="AI クライアントの接続方法 (Claude / ChatGPT / Gemini)"
         >
           <app-icon name="network" />
-        </button>
+        </a>
 
         <!-- Discord 認証ステータス / ログインボタン -->
         <div class="user-menu-wrap">
@@ -106,9 +105,9 @@
                 <button type="button" class="menu-item" (click)="openEditGuide()">
                   <app-icon name="edit" /> Wikiの編集方法
                 </button>
-                <button type="button" class="menu-item" (click)="openAiModal()">
-                  <app-icon name="network" /> AI コネクタ設定
-                </button>
+                <a class="menu-item" [routerLink]="['/wiki', 'AIクライアントの接続方法']" (click)="closeMenus()">
+                  <app-icon name="network" /> AI クライアントの接続方法
+                </a>
                 <button type="button" class="menu-item danger" (click)="auth.logout()">
                   <app-icon name="logout" /> ログアウト
                 </button>
@@ -147,9 +146,9 @@
           </button>
           <a [href]="site.discord" target="_blank" rel="noopener">Discord</a>
           <hr />
-          <button type="button" class="mobile-link" (click)="openAiModal()">
-            <app-icon name="network" /> AI コネクタ (Claude / ChatGPT / Gemini)
-          </button>
+          <a class="mobile-link" [routerLink]="['/wiki', 'AIクライアントの接続方法']" (click)="closeMenus()">
+            <app-icon name="network" /> AI クライアントの接続方法
+          </a>
           @if (auth.user(); as u) {
             <div class="mobile-user-card">
               <img [src]="u.avatar_url" alt="" class="tb-avatar" />
@@ -187,5 +186,4 @@
   </div>
 </div>
 
-<app-ai-connector-modal [isOpen]="ui.aiOpen()" (close)="ui.aiOpen.set(false)" />
 <app-edit-guide-modal [isOpen]="ui.guideOpen()" (close)="ui.guideOpen.set(false)" />

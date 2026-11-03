@@ -11,37 +11,6 @@ export interface AuthUser {
   roles: string[];
 }
 
-/** 各サービスの URL。正本はサーバーの設定で、応答からもらう (docs/07_System/サービスのURLと役割.md) */
-export interface ServiceUrls {
-  auth: string;
-  api: string;
-  mcp: string;
-}
-
-export interface ConnectorInfo {
-  token: string;
-  expires_at: string;
-  services: ServiceUrls;
-  connectors: {
-    claude_mcp: {
-      type: string;
-      url: string;
-      config_example: Record<string, unknown>;
-    };
-    chatgpt: {
-      type: string;
-      schema_url: string;
-      auth_type: string;
-      token: string;
-    };
-    gemini: {
-      type: string;
-      schema_url: string;
-      token: string;
-    };
-  };
-}
-
 export const AUTH_BASE_URL = 'https://auth.torosaba.net';
 export const API_BASE_URL = 'https://api.torosaba.net';
 
@@ -137,23 +106,6 @@ export class AuthService {
       return data.token;
     } catch (e) {
       console.error('Failed to get API token:', e);
-      return null;
-    }
-  }
-
-  async getAiConnectors(): Promise<ConnectorInfo | null> {
-    if (!this.browser) return null;
-    try {
-      const res = await fetch(`${AUTH_BASE_URL}/api/auth/token`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-      if (res.ok) {
-        return (await res.json()) as ConnectorInfo;
-      }
-      return null;
-    } catch (e) {
-      console.error('Failed to get AI connector info:', e);
       return null;
     }
   }

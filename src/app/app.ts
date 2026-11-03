@@ -12,7 +12,6 @@ import { PwaUpdates } from './core/pwa';
 import { AuthService } from './core/auth';
 import { ContentService, PageSummary } from './core/content';
 import { UiState } from './core/ui';
-import { AiConnectorModalComponent } from './shared/components/ai-connector-modal/ai-connector-modal.component';
 import { EditGuideModalComponent } from './shared/components/edit-guide-modal/edit-guide-modal.component';
 
 const norm = (s: string) => s.normalize('NFKC').toLowerCase();
@@ -26,7 +25,6 @@ const norm = (s: string) => s.normalize('NFKC').toLowerCase();
     FormsModule,
     VideoBackground,
     Icon,
-    AiConnectorModalComponent,
     EditGuideModalComponent,
   ],
   templateUrl: './app.html',
@@ -153,10 +151,9 @@ export class App {
     }
   }
 
-  protected openAiModal() {
+  protected closeMenus() {
     this.menuOpen.set(false);
     this.userMenuOpen.set(false);
-    this.ui.openAi();
   }
 
   protected openEditGuide() {
@@ -182,7 +179,6 @@ export class App {
     if (e.key === 'Escape') {
       this.menuOpen.set(false);
       this.userMenuOpen.set(false);
-      this.ui.aiOpen.set(false);
       this.ui.guideOpen.set(false);
     }
   }

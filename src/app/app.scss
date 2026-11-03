@@ -276,6 +276,7 @@
   border-radius: 3px;
   background: linear-gradient(180deg, #3c8cf7, #1659d6);
   color: #fff;
+  text-decoration: none;
   cursor: pointer;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
 
@@ -319,6 +320,7 @@
   border-radius: 3px;
   background: linear-gradient(180deg, #3c8cf7, #1659d6);
   color: #fff;
+  text-decoration: none;
   cursor: pointer;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
 
@@ -389,6 +391,7 @@
     gap: 6px;
     border-radius: 2px;
     color: #000;
+    text-decoration: none;
 
     &:hover {
       background: #0055ea;
@@ -414,6 +417,7 @@
   border: none;
   border-top: 1px solid rgb(255 255 255 / 0.2);
   text-align: left;
+  text-decoration: none;
   font-size: 14px;
   cursor: pointer;
   display: flex;
@@ -537,7 +541,7 @@ main {
   }
 }
 
-// 狭い画面では、検索欄がつぶれないよう、AI コネクタとログインはメニューの中だけにする
+// 狭い画面では、検索欄がつぶれないよう、接続方法とログインはメニューの中だけにする
 @media (max-width: 700px) {
   .ai-btn,
   .user-menu-wrap {
