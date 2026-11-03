@@ -291,6 +291,13 @@ h1 {
   border-color: #3a5f9e;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .icons a:hover {
+    background: #2c3a52;
+    border-color: #3a5f9e;
+  }
+}
+
 .list-title {
   margin: 0 0 6px;
   font-size: 1.05rem;
@@ -336,6 +343,19 @@ h1 {
 
   tr:hover td {
     background: #2c3a52;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .details {
+    th {
+      background: #303133;
+      color: var(--ink);
+    }
+
+    tr:hover td {
+      background: #2c3a52;
+    }
   }
 }
 

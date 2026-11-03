@@ -120,8 +120,14 @@
           }
         </div>
 
-        <button class="tb-btn" type="button" (click)="toggleTheme()" [attr.aria-label]="dark() ? 'ライトモードにする' : 'ダークモードにする'">
-          <app-icon [name]="dark() ? 'sun' : 'moon'" />
+        <button
+          class="tb-btn"
+          type="button"
+          (click)="toggleTheme()"
+          [attr.aria-label]="themeLabel()"
+          [title]="themeLabel()"
+        >
+          <app-icon [name]="themeIcon()" />
         </button>
         <button
           class="tb-btn menu-btn"
