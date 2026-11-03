@@ -1,5 +1,5 @@
 // TORO-Server/TORO-SVG のロゴから、ファビコン・PWA のアイコン・OGP 画像を作る (手で実行して、結果をコミットする)
-//   node scripts/build-icons.mjs
+//   node scripts/build-icons.ts
 import { mkdir, readFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -46,7 +46,7 @@ npm run build      # dist/toro-website/browser に静的サイトを書き出す
 npm test           # フロントエンドのテスト
 ```
 
-- `scripts/build-content.mjs` — `docs/` の Markdown を HTML にして、`public/content/` (ページの JSON・全文検索の索引)、`feed.xml`、`sitemap.xml` を作ります。`npm start` / `npm run build` の前に自動で動きます。
+- `scripts/build-content.ts` — `docs/` の Markdown を HTML にして、`public/content/` (ページの JSON・全文検索の索引)、`feed.xml`、`sitemap.xml` を作ります。`npm start` / `npm run build` の前に自動で動きます。
 - ページはすべてプリレンダーするので、JavaScript が動かなくても読めます。
 - `main` に push すると GitHub Actions が公開します。
 
@@ -60,7 +60,7 @@ npm test           # フロントエンドのテスト
 - ページのデータ (`/content/`) は、ネットワーク優先でキャッシュします (4 秒で返らなければキャッシュ)。画像 (`/attachments/`) はキャッシュ優先です。
 - 背景の動画 (`/background/`) は大きいのでキャッシュしません。オフラインでは XP の青い壁紙になります。
 - 新しい版を公開すると、開いている人には次にページを移ったときに、ページごと読み直して届けます ([`src/app/core/pwa.ts`](src/app/core/pwa.ts))。キャッシュを消す必要はありません。
-- アイコン (`public/icons/`) は `node scripts/build-icons.mjs` でロゴから作ります。
+- アイコン (`public/icons/`) は `node scripts/build-icons.ts` でロゴから作ります。
 
 ## 背景の 3D マップの動画
 
@@ -77,7 +77,7 @@ npm run background -- spawn --frames 30   # 試し撮り (.cache/background/spaw
 - MarumaSign の看板の画像も映します (3D マップの map-web が描く。看板のデータは [MarumaSign-Companion](https://github.com/TORO-Server/MarumaSign-Companion) が書く)。
   背景のカメラは名所から離れているので、撮影のときだけ看板のデータに `fullDrawDistance` を足して遠くの看板まで描かせます (本番の地図は変えません)。看板の板と URL のラベルは出しません。
 - 名所 (座標・名前・回し始める向き) は [`src/app/map/places.json`](src/app/map/places.json) で、`/map` ページと共通です。
-  カメラの距離・角度・長さなどは [`scripts/background.config.mjs`](scripts/background.config.mjs) で変えられます。
+  カメラの距離・角度・長さなどは [`scripts/background.config.ts`](scripts/background.config.ts) で変えられます。
 - 1 か所 12 秒、1080p の AV1 と 720p の H.264、ポスター画像を作ります。`public/background/background.json` があると、サイトが自動で動画を流します (ないときは XP の青い壁紙)。
 - 動きを減らす設定の人や省データモードの人には、動画の代わりにポスター画像を出します。
 

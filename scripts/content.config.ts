@@ -1,9 +1,16 @@
 // Wiki (docs/) の分類と、サイト全体の設定
+export interface Category {
+  dir: string;
+  id: string;
+  label: string;
+  description: string;
+}
+
 export const SITE_URL = 'https://wiki.torosaba.net';
 export const REPO = 'TORO-Server/TORO-Wiki';
 export const BRANCH = 'main';
 
-export const CATEGORIES = [
+export const CATEGORIES: Category[] = [
   { dir: '00_Main', id: 'main', label: 'TORO Server', description: 'サーバーの概要とお知らせ' },
   { dir: '01_Guide', id: 'guide', label: 'ガイド', description: 'ルール・利用規約・はじめての方へ' },
   { dir: '02_Plugins', id: 'plugins', label: 'プラグイン・Mod', description: 'サーバーで使えるプラグインと Mod の使い方' },
@@ -15,7 +22,7 @@ export const CATEGORIES = [
 ];
 
 // 一覧には出さないページ (URL では開ける)。seesaa のメニュー用ページなど
-export const HIDDEN = ['MenuBar1', 'MenuBar2', 'Experimental', 'プラグイン解説（編集用）'];
+export const HIDDEN: string[] = ['MenuBar1', 'MenuBar2', 'Experimental', 'プラグイン解説（編集用）'];
 
 // seesaa から一括で取り込んだコミットなど、「更新日」に数えないコミットの目印
 export const SKIP_UPDATED_MARK = '[skip-updated]';
