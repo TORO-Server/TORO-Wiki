@@ -60,7 +60,7 @@ npm test           # フロントエンドのテスト
 - ページのデータ (`/content/`) は、ネットワーク優先でキャッシュします (4 秒で返らなければキャッシュ)。画像 (`/attachments/`) はキャッシュ優先です。
 - 背景の動画 (`/background/`) は大きいのでキャッシュしません。オフラインでは XP の青い壁紙になります。
 - 新しい版を公開すると、開いている人には次にページを移ったときに、ページごと読み直して届けます ([`src/app/core/pwa.ts`](src/app/core/pwa.ts))。キャッシュを消す必要はありません。
-- アイコン (`public/icons/`) は `node scripts/build-icons.ts` でロゴから作ります。
+- アイコン (`public/icons/`) は `npm run icons` でロゴから作ります。
 
 ## 背景の 3D マップの動画
 

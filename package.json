@@ -11,7 +11,8 @@
     "prebuild": "npm run content",
     "build": "ng build",
     "postbuild": "node scripts/postbuild.ts",
-    "test": "node --test \"src/app/core/*.spec.ts\""
+    "test": "node --test \"src/app/core/*.spec.ts\"",
+    "icons": "node scripts/build-icons.ts"
   },
   "private": true,
   "packageManager": "npm@11.19.1",
