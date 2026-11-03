@@ -37,6 +37,12 @@
   border-right-color: #303030;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .explorer-bar {
+    border-right-color: #303030;
+  }
+}
+
 .xp-pane ul,
 .xp-pane ol,
 .toc-mobile ol {
@@ -77,6 +83,12 @@
 
 :root[data-theme='dark'] .tasks .primary-action {
   color: #6eb0ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .tasks .primary-action {
+    color: #6eb0ff;
+  }
 }
 
 .toc li a {
@@ -137,6 +149,13 @@
 :root[data-theme='dark'] .siblings li a:hover {
   background: #303030;
   border-color: #659bfc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .siblings li a:hover {
+    background: #303030;
+    border-color: #659bfc;
+  }
 }
 
 .content {

@@ -16,6 +16,8 @@ import { EditGuideModalComponent } from './shared/components/edit-guide-modal/ed
 
 const norm = (s: string) => s.normalize('NFKC').toLowerCase();
 
+export type ThemeMode = 'system' | 'light' | 'dark';
+
 @Component({
   selector: 'app-root',
   imports: [
@@ -49,7 +51,27 @@ export class App {
   protected readonly menuOpen = signal(false);
   protected readonly userMenuOpen = signal(false);
   protected readonly query = signal('');
-  protected readonly dark = signal(false);
+  protected readonly theme = signal<ThemeMode>('system');
+  protected readonly themeIcon = computed(() => {
+    switch (this.theme()) {
+      case 'light':
+        return 'sun';
+      case 'dark':
+        return 'moon';
+      case 'system':
+        return 'monitor';
+    }
+  });
+  protected readonly themeLabel = computed(() => {
+    switch (this.theme()) {
+      case 'system':
+        return 'テーマ: ブラウザのデフォルト (クリックでライトモードに変更)';
+      case 'light':
+        return 'テーマ: ライトモード (クリックでダークモードに変更)';
+      case 'dark':
+        return 'テーマ: ダークモード (クリックでブラウザのデフォルトに変更)';
+    }
+  });
 
   // ---- 検索ボックスの候補 (ページ名) ----
   private readonly pages = signal<PageSummary[]>([]);
@@ -83,8 +105,17 @@ export class App {
     });
     if (this.browser) {
       inject(PwaUpdates).start();
-      const t = this.doc.documentElement.dataset['theme'];
-      this.dark.set(t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+      let saved: string | null = null;
+      try {
+        saved = localStorage.getItem('theme');
+      } catch {}
+      if (saved === 'light' || saved === 'dark') {
+        this.theme.set(saved);
+        this.doc.documentElement.dataset['theme'] = saved;
+      } else {
+        this.theme.set('system');
+        delete this.doc.documentElement.dataset['theme'];
+      }
     }
   }
 
@@ -141,8 +172,20 @@ export class App {
   }
 
   protected toggleTheme() {
-    const next = this.dark() ? 'light' : 'dark';
-    this.dark.set(next === 'dark');
+    const current = this.theme();
+    const next: ThemeMode =
+      current === 'system' ? 'light' :
+      current === 'light' ? 'dark' : 'system';
+    this.theme.set(next);
+    if (next === 'system') {
+      delete this.doc.documentElement.dataset['theme'];
+      try {
+        localStorage.removeItem('theme');
+      } catch {
+        // 保存できなくても、このページの間は切り替わる
+      }
+      return;
+    }
     this.doc.documentElement.dataset['theme'] = next;
     try {
       localStorage.setItem('theme', next);
