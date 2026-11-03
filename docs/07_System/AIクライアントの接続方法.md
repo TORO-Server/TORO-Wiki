@@ -28,13 +28,14 @@ https://mcp.torosaba.net/
 ## ChatGPT
 
 1. [プラグイン] → [追加] → [カスタム MCP サーバーを追加] を開きます。
-2. 名前に `TORO Server`、接続タイプの [サーバー URL] に接続先を入力します。OAuth は自動で判別されます。
-3. 確認のチェックを入れて [プラグインとして作成] を押します。
-4. [TORO Server に接続] を押し、開いた「連携の許可」の画面で承認します。
+2. アイコンの [+] を押し、保存しておいた [TORO Server のアイコン](../attachments/toro-server-icon.png) を選びます。
+3. 名前に `TORO Server`、接続タイプの [サーバー URL] に接続先を入力します。OAuth は自動で判別されます。
+4. 確認のチェックを入れて [プラグインとして作成] を押します。
+5. [TORO Server に接続] を押し、開いた「連携の許可」の画面で承認します。
 
-アイコンは ChatGPT が登録のときに自動で選ぶので、下の画像と違うことがあります。
+アイコンを選ばないと、ChatGPT が自動で選んだ画像になります。登録のあとで変えるには、削除して登録し直します。
 
-![ChatGPT に登録した TORO Server の画面](../attachments/ai-connect-chatgpt.png)
+![ChatGPT に登録した TORO Server の画面](../attachments/ai-connect-chatgpt-toro-icon.png)
 
 ## Gemini
 
