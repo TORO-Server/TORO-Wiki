@@ -58,11 +58,6 @@ export class AiConnectorModalComponent {
     }, 2000);
   }
 
-  /** https://auth.torosaba.net のような API の根 (openapi.json の URL から /api/openapi.json を除く) */
-  get apiBase(): string {
-    return this.info()?.connectors.chatgpt.schema_url.replace(/\/api\/openapi\.json\$/, '') ?? '';
-  }
-
   get claudeConfigJson(): string {
     const i = this.info();
     if (!i) return '';

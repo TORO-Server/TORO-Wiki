@@ -2,7 +2,7 @@ import { Component, DOCUMENT, PLATFORM_ID, computed, effect, inject, input, outp
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { marked } from 'marked';
-import { AuthService, AUTH_BASE_URL } from '../../../core/auth';
+import { API_BASE_URL, AuthService } from '../../../core/auth';
 import { Icon } from '../../../core/icons';
 import { Dialog } from '../../dialog';
 import { SITE } from '../../../core/site';
@@ -79,9 +79,7 @@ export class WikiEditorComponent {
     this.error.set(null);
     this.success.set(null);
     try {
-      const res = await fetch(`${AUTH_BASE_URL}/api/docs/raw?path=${encodeURIComponent(filePath)}`, {
-        credentials: 'include',
-      });
+      const res = await fetch(`${API_BASE_URL}/docs/raw?path=${encodeURIComponent(filePath)}`);
       if (!res.ok) {
         throw new Error(`ファイル取得に失敗しました (${res.status})`);
       }
@@ -111,12 +109,16 @@ export class WikiEditorComponent {
     this.success.set(null);
 
     try {
-      const res = await fetch(`${AUTH_BASE_URL}/api/docs/save`, {
+      const token = await this.auth.getApiToken();
+      if (!token) {
+        throw new Error('ログインの期限が切れました。ログインし直してください。');
+      }
+      const res = await fetch(`${API_BASE_URL}/docs/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-        credentials: 'include',
         body: JSON.stringify({
           path: this.path(),
           content: this.content(),

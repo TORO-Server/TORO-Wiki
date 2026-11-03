@@ -91,10 +91,10 @@
               <div class="hint-box">
                 <strong>利用可能なツール:</strong>
                 <ul>
-                  <li><code>search_wiki</code>: キーワードで Wiki 記事を検索</li>
-                  <li><code>get_page</code>: 指定ページの最新 Markdown 原文と SHA を取得</li>
-                  <li><code>list_pages</code>: カテゴリ別ページ一覧を取得</li>
-                  <li><code>save_page</code>: ページを編集して GitHub へコミット（Discord ユーザーとして署名）</li>
+                  <li><code>wiki_search</code>: キーワードで Wiki 記事を検索</li>
+                  <li><code>wiki_get_page</code>: 指定ページの最新 Markdown 原文と SHA を取得</li>
+                  <li><code>wiki_list_pages</code>: カテゴリ別ページ一覧を取得</li>
+                  <li><code>wiki_save_page</code>: ページを編集して GitHub へコミット（Discord ユーザーとして署名）</li>
                 </ul>
               </div>
             </section>
@@ -145,7 +145,7 @@
                 </div>
                 <pre><code>curl -G -H "Authorization: Bearer {{ data.token }}" \
      --data-urlencode "path=docs/01_Guide/ルール.md" \
-     "{{ apiBase }}/api/docs/raw"</code></pre>
+     "{{ data.services.api }}/docs/raw"</code></pre>
               </div>
             </section>
           }

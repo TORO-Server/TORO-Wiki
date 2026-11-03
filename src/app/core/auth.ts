@@ -11,9 +11,17 @@ export interface AuthUser {
   roles: string[];
 }
 
+/** 各サービスの URL。正本はサーバーの設定で、応答からもらう (docs/07_System/サービスのURLと役割.md) */
+export interface ServiceUrls {
+  auth: string;
+  api: string;
+  mcp: string;
+}
+
 export interface ConnectorInfo {
   token: string;
   expires_at: string;
+  services: ServiceUrls;
   connectors: {
     claude_mcp: {
       type: string;
@@ -35,6 +43,10 @@ export interface ConnectorInfo {
 }
 
 export const AUTH_BASE_URL = 'https://auth.torosaba.net';
+export const API_BASE_URL = 'https://api.torosaba.net';
+
+/** 期限のこの秒数前には取り直す */
+const API_TOKEN_MARGIN_SECONDS = 30;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -43,6 +55,8 @@ export class AuthService {
   readonly user = signal<AuthUser | null>(null);
   readonly loading = signal<boolean>(true);
   readonly initialized = signal<boolean>(false);
+
+  private apiToken: { value: string; expiresAt: number } | null = null;
 
   constructor() {
     if (this.browser) {
@@ -97,8 +111,34 @@ export class AuthService {
     } catch {
       // ignore
     }
+    this.apiToken = null;
     this.user.set(null);
     window.location.reload();
+  }
+
+  /**
+   * API (api.torosaba.net) を呼ぶための短い期限のトークン。
+   * ログインの Cookie は auth.torosaba.net にしか届かないので、ここで換えてもらう。メモリにだけ持つ。
+   */
+  async getApiToken(): Promise<string | null> {
+    if (!this.browser) return null;
+    const now = Date.now() / 1000;
+    if (this.apiToken && this.apiToken.expiresAt - API_TOKEN_MARGIN_SECONDS > now) {
+      return this.apiToken.value;
+    }
+    try {
+      const res = await fetch(`${AUTH_BASE_URL}/api/auth/session-token`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as { token: string; expires_in: number };
+      this.apiToken = { value: data.token, expiresAt: now + data.expires_in };
+      return data.token;
+    } catch (e) {
+      console.error('Failed to get API token:', e);
+      return null;
+    }
   }
 
   async getAiConnectors(): Promise<ConnectorInfo | null> {

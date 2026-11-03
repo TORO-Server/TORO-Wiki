@@ -5,7 +5,9 @@ category: system
 
 # Discord認証編集とAIコネクタ
 
-TORO Server Wiki（wiki.torosaba.net）は、Cloudflare と Discord OAuth2 を連携したブラウザ内編集機能、および Claude・ChatGPT・Gemini から Wiki を直接操作できる AI コネクタ機能を備えています。
+TORO Server Wiki（wiki.torosaba.net）は、Discord のログインによるブラウザ内編集と、Claude・ChatGPT・Gemini から Wiki を直接操作できる AI コネクタを備えています。
+
+各サービスの URL と役割は [サービスのURLと役割](./サービスのURLと役割.md) にまとめてあります。
 
 ---
 
@@ -18,50 +20,20 @@ Discord アカウントでログインすることで、GitHub アカウント�
 2. TORO Server 公式 Discord サーバーに参加していることが確認されると、編集権限が付与されます。
 3. 任意の Wiki ページで「このページを編集」をクリックすると、Windows XP スタイルの Markdown エディタが開きます。
 4. Markdown を編集し、リアルタイムプレビューで確認後、「保存してコミット」をクリックします。
-5. Cloudflare Pages / Workers が GitHub REST API を経由してリポジトリにコミットし、自動ビルド・デプロイが実行されます。
+5. TORO Server の API が GitHub のリポジトリにコミットし、自動ビルド・デプロイが実行されます。
    * コミットログの作者（Author）には、Discord ユーザー名と ID が記録されます。
 
 ---
 
 ## 2. AI コネクタ (Claude / ChatGPT / Gemini)
 
-Discord 認証によって発行される専用の Bearer トークンを用いて、各種生成 AI アシスタントから Wiki を検索・参照・編集できます。
-
-### 連携方式の対応状況
-
-| AI クライアント | プロトコル / 規格 | エンドポイント | 特徴 |
-| :--- | :--- | :--- | :--- |
-| **Claude** (Desktop / Code) | Model Context Protocol (MCP) | `https://auth.torosaba.net/api/mcp` | Streamable HTTP / JSON-RPC 2.0。プロンプトから Wiki 検索・記事編集ツールを自動呼び出し |
-| **ChatGPT** (Custom GPTs) | OpenAPI 3.1 Actions | `https://auth.torosaba.net/api/openapi.json` | Custom GPT の Actions にスキーマを登録し、Bearer 認証で呼び出し |
-| **Gemini** (API / Gems) | Function Calling / REST | `https://auth.torosaba.net/api/openapi.json` または `/api/docs/*` | REST API または OpenAPI スキーマを Tool 定義として渡して利用 |
+AI クライアントから Wiki を検索・参照・編集できます。接続の手順は、接続先のページにクライアントごとの実際の画面つきで載せています。接続先は [サービスのURLと役割](./サービスのURLと役割.md) を見てください。
 
 ### 提供ツール一覧
 * `wiki_search(query)`: キーワードによる Wiki 記事検索
 * `wiki_get_page(path)`: 指定ページの最新 Markdown 原文と git SHA の取得
 * `wiki_list_pages(category)`: 全ページ・カテゴリの一覧取得
 * `wiki_save_page(path, content, sha, message)`: ページの編集・コミット（Discord ユーザー名で署名）
-
----
-
-## 3. 設定手順
-
-### Claude Desktop (`claude_desktop_config.json`)
-サイト上部の「AI コネクタ設定」ボタンをクリックして Bearer トークンを取得し、設定ファイルに以下を追加します。
-
-```json
-{
-  "mcpServers": {
-    "toro-wiki": {
-      "url": "https://auth.torosaba.net/api/mcp",
-      "headers": {
-        "Authorization": "Bearer <YOUR_DISCORD_TOKEN>"
-      }
-    }
-  }
-}
-```
-
-### ChatGPT (Custom GPTs)
-1. Custom GPT の設定画面で「Actions」を追加します。
-2. 「Import from URL」に `https://auth.torosaba.net/api/openapi.json` を入力します。
-3. Authentication を「API Key」->「Bearer」に設定し、Bearer トークンを入力します。
+* `server_get_status()`: Minecraft サーバーの稼働状態の取得
+* `server_get_info()`: TORO Server の各サービスの案内
+* `auth_get_identity()`: 呼び出し元の身元と編集権限の確認

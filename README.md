@@ -31,27 +31,19 @@ https://wiki.torosaba.net/
 
 サイト上の各ページの「このページを編集」から、Discord でログインして直接ブラウザ上で編集するか、GitHub で直接変更を提案できます。
 
-## Discord ログイン & ブラウザ編集 (Cloudflare 連携)
+## Discord ログインと AI コネクタ
 
-Cloudflare Pages Functions / Workers と Discord OAuth2 を組み合わせ、ブラウザ上での直接編集に対応しています。
-- **認証**: Discord アカウントでログインし、TORO Server 公式 Discord サーバーの参加状態と権限を検証します。
-- **編集 & 保存**: ブラウザ上の Windows XP 風エディタで編集・プレビューし、GitHub REST API 経由でリポジトリに自動コミットされます。コミット履歴の作者には Discord ユーザー名が記録されます。
-- 設定方法は [`.env.example`](.env.example) および [`docs/07_System/Discord認証編集とAIコネクタ.md`](docs/07_System/Discord認証編集とAIコネクタ.md) を参照してください。
+ログイン、ブラウザからの編集の保存、AI コネクタは、このリポジトリではなく [TORO-Auth](https://github.com/TORO-Server/TORO-Auth) のサーバーが担当します。
 
-## AI コネクタ (Claude / ChatGPT / Gemini)
-
-Discord 認証に紐づく Bearer トークンを用いて、各種生成 AI アシスタントと Wiki を直結できます。
-- **Claude (Desktop / Code)**: Model Context Protocol (MCP) エンドポイント (`/api/mcp`) により、検索・参照・編集ツールをネイティブ実行できます。
-- **ChatGPT (Custom GPTs)**: OpenAPI 3.1 仕様書 (`/api/openapi.json`) を Actions にインポートして利用できます。
-- **Gemini**: REST API / Function Calling で呼び出し可能です。
-
+- 各サービスの URL と役割は [`docs/07_System/サービスのURLと役割.md`](docs/07_System/サービスのURLと役割.md) が唯一の正本です。URL を書くときは、ここへリンクしてください。
+- 使い方は [`docs/07_System/Discord認証編集とAIコネクタ.md`](docs/07_System/Discord認証編集とAIコネクタ.md) を見てください。
 ## 開発
 
 ```bash
 npm ci
 npm start          # docs/ を変換して、開発サーバーを起動 (http://localhost:4200)
 npm run build      # dist/toro-website/browser に静的サイトを書き出す
-npm test           # ログイン・編集 API (functions/) の安全確認のテスト
+npm test           # フロントエンドのテスト
 ```
 
 - `scripts/build-content.mjs` — `docs/` の Markdown を HTML にして、`public/content/` (ページの JSON・全文検索の索引)、`feed.xml`、`sitemap.xml` を作ります。`npm start` / `npm run build` の前に自動で動きます。
