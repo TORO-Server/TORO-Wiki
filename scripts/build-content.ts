@@ -8,18 +8,49 @@ import matter from 'gray-matter';
 import { Marked } from 'marked';
 import GithubSlugger from 'github-slugger';
 import sanitizeHtml from 'sanitize-html';
-import { SITE_URL, REPO, BRANCH, CATEGORIES, HIDDEN, SKIP_UPDATED_MARK, GIT_SINCE } from './content.config.mjs';
+import { SITE_URL, REPO, BRANCH, CATEGORIES, HIDDEN, SKIP_UPDATED_MARK, GIT_SINCE } from './content.config.ts';
+import type { Category } from './content.config.ts';
+
+interface TocItem {
+  id: string;
+  text: string;
+  depth: number;
+}
+
+interface PageData {
+  slug: string;
+  id: string;
+  title: string;
+  category: string;
+  updated: string | null;
+  author: string | null;
+  seesaa: string | null;
+  hidden: boolean;
+  source: string;
+  dir: string;
+  content: string;
+  links: Set<string>;
+  html?: string;
+  toc?: TocItem[];
+  text?: string;
+  excerpt?: string;
+}
+
+interface GitHistoryItem {
+  date: string;
+  author: string;
+}
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS = join(ROOT, 'docs');
 const PUBLIC = join(ROOT, 'public');
 const OUT = join(PUBLIC, 'content');
 
-const warnings = [];
-const toPosix = (p) => p.split(sep).join('/');
+const warnings: string[] = [];
+const toPosix = (p: string): string => p.split(sep).join('/');
 
-async function walk(dir) {
-  const out = [];
+async function walk(dir: string): Promise<string[]> {
+  const out: string[] = [];
   for (const e of await readdir(dir, { withFileTypes: true })) {
     const full = join(dir, e.name);
     if (e.isDirectory()) {
@@ -32,8 +63,8 @@ async function walk(dir) {
 }
 
 /** git の履歴から、ファイルごとの最後の編集 (一括取り込みのコミットを除く) を集める */
-function gitHistory() {
-  const map = new Map();
+function gitHistory(): Map<string, GitHistoryItem> {
+  const map = new Map<string, GitHistoryItem>();
   try {
     const log = execFileSync(
       'git',
@@ -43,18 +74,18 @@ function gitHistory() {
     for (const chunk of log.split('\0').slice(1)) {
       const [head, ...files] = chunk.split('\n');
       const [date, author, subject] = head.split('\t');
-      if (subject.includes(SKIP_UPDATED_MARK)) continue;
+      if (subject && subject.includes(SKIP_UPDATED_MARK)) continue;
       for (const f of files) {
         if (f && !map.has(f)) map.set(f, { date, author });
       }
     }
-  } catch (e) {
+  } catch (e: any) {
     warnings.push(`git log を読めませんでした: ${e.message}`);
   }
   return map;
 }
 
-const stripTags = (html) =>
+const stripTags = (html: string): string =>
   html
     .replace(/<(script|style)[\s\S]*?<\/\1>/g, ' ')
     .replace(/<[^>]+>/g, ' ')
@@ -67,10 +98,10 @@ const stripTags = (html) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-const escapeXml = (s) =>
-  s.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' })[c]);
+const escapeXml = (s: string): string =>
+  s.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' })[c] || c);
 
-const safeDecode = (s) => {
+const safeDecode = (s: string): string => {
   try {
     return decodeURIComponent(s);
   } catch {
@@ -78,10 +109,10 @@ const safeDecode = (s) => {
   }
 };
 
-const pageUrl = (slug) => `/wiki/${encodeURIComponent(slug)}`;
+const pageUrl = (slug: string): string => `/wiki/${encodeURIComponent(slug)}`;
 
 /** 見出しと、旧 Wiki から引き継いだ手書きの「目次」を除いた、最初の文章 */
-function makeExcerpt(html) {
+function makeExcerpt(html: string): string {
   const body = html
     .replace(/<h\d[\s\S]*?<\/h\d>/g, ' ')
     .replace(/<a class="anchor"[^>]*>#<\/a>/g, '')
@@ -92,15 +123,15 @@ function makeExcerpt(html) {
   return text.slice(0, 140);
 }
 
-async function main() {
+async function main(): Promise<void> {
   const files = (await walk(DOCS)).filter((f) => toPosix(relative(DOCS, f)) !== 'README.md');
   const history = gitHistory();
 
   // 1 周目: ページの一覧を作る (リンクの解決に使う)
-  const pages = [];
-  const byPath = new Map();
-  const bySlug = new Map();
-  const slugKeys = new Set();
+  const pages: PageData[] = [];
+  const byPath = new Map<string, PageData>();
+  const bySlug = new Map<string, PageData>();
+  const slugKeys = new Set<string>();
   // 02_Plugins などを先に処理して、短い URL は本来のページに割り当てる
   files.sort((a, b) => toPosix(relative(DOCS, a)).localeCompare(toPosix(relative(DOCS, b))));
   for (const file of files) {
@@ -109,7 +140,7 @@ async function main() {
     const { data: fm, content } = matter(raw);
     const name = basename(file, '.md');
     const dir = rel.split('/')[0];
-    const cat = CATEGORIES.find((c) => c.dir === dir);
+    const cat = CATEGORIES.find((c: Category) => c.dir === dir);
     let slug = name.replace(/\s+/g, '_');
     // 大文字・小文字だけが違う名前 (CoreProtect / Coreprotect) も、出力のフォルダーがぶつかる環境があるので分ける
     if (slugKeys.has(slug.toLowerCase())) {
@@ -119,20 +150,20 @@ async function main() {
     const git = history.get(`docs/${rel}`);
     const fmDate = fm.updated ? new Date(fm.updated).toISOString() : null;
     const gitDate = git ? new Date(git.date).toISOString() : null;
-    const useGit = gitDate && (!fmDate || gitDate > fmDate);
-    const page = {
+    const useGit = Boolean(gitDate && (!fmDate || gitDate > fmDate));
+    const page: PageData = {
       slug,
       id: createHash('sha1').update(slug).digest('hex').slice(0, 12),
       title: String(fm.title ?? name),
       category: cat?.id ?? 'other',
       updated: useGit ? gitDate : fmDate,
-      author: useGit ? git.author : (fm.author ?? null),
+      author: useGit ? (git?.author ?? null) : (fm.author ?? null),
       seesaa: fm.seesaa ?? null,
       hidden: HIDDEN.includes(name) || fm.hidden === true,
       source: `docs/${rel}`,
       dir: posix.dirname(rel),
       content,
-      links: new Set(),
+      links: new Set<string>(),
     };
     pages.push(page);
     byPath.set(rel, page);
@@ -140,8 +171,8 @@ async function main() {
   }
 
   /** ページ内のリンク・画像の URL を、サイトの URL に直す */
-  const resolveUrl = (page, href, kind) => {
-    if (!href) return { href };
+  const resolveUrl = (page: PageData, href: string | undefined | null, kind: 'link' | 'image'): { href: string | null; external?: boolean } => {
+    if (!href) return { href: href ?? null };
     if (/^(https?:|mailto:|tel:|data:)/i.test(href) || href.startsWith('//')) {
       const m = href.match(/^https?:\/\/seesaawiki\.jp\/toro_server\/d\/([^#?]+)/);
       if (m) warnings.push(`${page.source}: seesaa のリンクが残っています ${href}`);
@@ -168,11 +199,11 @@ async function main() {
   // 2 周目: HTML にする
   for (const page of pages) {
     const slugger = new GithubSlugger();
-    const toc = [];
+    const toc: TocItem[] = [];
     const marked = new Marked({
       gfm: true,
       renderer: {
-        heading({ tokens, depth }) {
+        heading({ tokens, depth }: { tokens: any; depth: number }) {
           const inner = this.parser.parseInline(tokens);
           const text = stripTags(inner);
           const id = slugger.slug(text) || `h-${toc.length}`;
@@ -181,10 +212,10 @@ async function main() {
         },
       },
     });
-    let html = marked.parse(page.content);
+    let html = marked.parse(page.content) as string;
 
     html = sanitizeHtml(html, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'del', 's', 'ins', 'details', 'summary', 'span', 'font', 'u', 'center']),
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'del', 's', 'ins', 'details', 'summary', 'span', 'font', 'u', 'center', 'input']),
       allowedAttributes: {
         '*': ['id', 'style', 'align', 'title', 'class'],
         a: ['href', 'name', 'target', 'rel', 'aria-hidden'],
@@ -195,10 +226,9 @@ async function main() {
         ol: ['start'],
         input: ['type', 'checked', 'disabled'],
       },
-      allowedTags_input: true,
       allowedSchemes: ['http', 'https', 'mailto', 'data'],
       transformTags: {
-        a: (tag, attribs) => {
+        a: (_tag: string, attribs: Record<string, string>) => {
           // href の無い <a id="..."> はリンクではなく、飛び先の目印 (seesaa から引き継いだもの)
           if (attribs.href == null) return { tagName: 'a', attribs: { ...attribs } };
           const r = resolveUrl(page, attribs.href, 'link');
@@ -215,7 +245,7 @@ async function main() {
           }
           return { tagName: 'a', attribs: a };
         },
-        img: (tag, attribs) => {
+        img: (_tag: string, attribs: Record<string, string>) => {
           const r = resolveUrl(page, attribs.src, 'image');
           // https のページに http の画像を置くと、ブラウザーによっては読まれないので https にする
           const src = (r.href ?? '').replace(/^http:\/\//i, 'https://');
@@ -240,12 +270,12 @@ async function main() {
     page.excerpt = makeExcerpt(html);
   }
 
-  const backlinks = new Map();
+  const backlinks = new Map<string, string[]>();
   for (const p of pages) {
     for (const s of p.links) {
       if (s === p.slug) continue;
       if (!backlinks.has(s)) backlinks.set(s, []);
-      backlinks.get(s).push(p.slug);
+      backlinks.get(s)!.push(p.slug);
     }
   }
 
@@ -295,7 +325,7 @@ async function main() {
   );
 
   // RSS (最近更新されたページ)
-  const recent = pages.filter((p) => p.updated && !p.hidden).sort((a, b) => b.updated.localeCompare(a.updated)).slice(0, 30);
+  const recent = pages.filter((p) => p.updated && !p.hidden).sort((a, b) => (b.updated || '').localeCompare(a.updated || '')).slice(0, 30);
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel>
@@ -310,8 +340,8 @@ ${recent
 <title>${escapeXml(p.title)}</title>
 <link>${SITE_URL}${pageUrl(p.slug)}</link>
 <guid isPermaLink="false">${escapeXml(p.slug)}@${p.updated}</guid>
-<pubDate>${new Date(p.updated).toUTCString()}</pubDate>
-${p.author ? `<dc:creator>${escapeXml(p.author)}</dc:creator>\n` : ''}<description>${escapeXml(p.excerpt)}</description>
+<pubDate>${new Date(p.updated!).toUTCString()}</pubDate>
+${p.author ? `<dc:creator>${escapeXml(p.author)}</dc:creator>\n` : ''}<description>${escapeXml(p.excerpt ?? '')}</description>
 </item>`,
   )
   .join('\n')}
@@ -320,7 +350,7 @@ ${p.author ? `<dc:creator>${escapeXml(p.author)}</dc:creator>\n` : ''}<descripti
 `;
   await writeFile(join(PUBLIC, 'feed.xml'), rss);
 
-  const urls = [
+  const urls: Array<{ loc: string; lastmod?: string | null }> = [
     { loc: '/' },
     { loc: '/wiki' },
     { loc: '/updates' },

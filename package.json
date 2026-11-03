@@ -1,15 +1,16 @@
 {
   "name": "toro-website",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
-    "content": "node scripts/build-content.mjs",
-    "background": "node scripts/render-background.mjs",
+    "content": "node scripts/build-content.ts",
+    "background": "node scripts/render-background.ts",
     "prestart": "npm run content",
     "start": "ng serve",
     "prebuild": "npm run content",
     "build": "ng build",
-    "postbuild": "node scripts/postbuild.mjs",
+    "postbuild": "node scripts/postbuild.ts",
     "test": "node --test \"src/app/core/*.spec.ts\""
   },
   "private": true,
@@ -32,6 +33,7 @@
     "@angular/cli": "^22.2.5",
     "@angular/compiler-cli": "^22.2.0",
     "@types/node": "^22.12.0",
+    "@types/sanitize-html": "^2.16.2",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "marked": "^18.1.2",
