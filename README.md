@@ -4,7 +4,7 @@ https://wiki.torosaba.net/
 
 マインクラフトのクリエイティブサーバー **TORO Server** の Wiki です。
 旧 Wiki ([seesaa wiki](https://seesaawiki.jp/toro_server/)) の全ページを引き継ぎ、Angular で一から作りました。
-見た目は Docusaurus 版の Windows XP 風デザインを受け継ぎ、デスクトップの壁紙に TORO Server の 3D マップの動画を流しています。
+見た目は Windows XP 風のデザインで、デスクトップの壁紙に TORO Server の 3D マップの動画を流しています。
 
 ## ページを編集する
 
@@ -37,6 +37,7 @@ https://wiki.torosaba.net/
 
 - 各サービスの URL と役割は [`docs/07_System/サービスのURLと役割.md`](docs/07_System/サービスのURLと役割.md) が唯一の正本です。URL を書くときは、ここへリンクしてください。
 - 使い方は [`docs/07_System/Discord認証編集とAIコネクタ.md`](docs/07_System/Discord認証編集とAIコネクタ.md) を見てください。
+
 ## 開発
 
 ```bash
