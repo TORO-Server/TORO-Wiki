@@ -110,14 +110,17 @@ export class ContentService {
 
   async page(rawSlug: string): Promise<WikiPage | null> {
     const index = await this.index();
-    let decoded = rawSlug;
-    try {
-      decoded = decodeURIComponent(rawSlug);
-    } catch {
-      // ignore
-    }
+    const safeDecode = (s: string): string => {
+      try {
+        return decodeURIComponent(s);
+      } catch {
+        return s;
+      }
+    };
+    const decoded = safeDecode(rawSlug);
+    // ファイル名に % が入った記事が 1 つあっても、ほかの記事は読めるように
     const summary = index.pages.find(
-      (p) => p.slug === rawSlug || p.slug === decoded || decodeURIComponent(p.slug) === decoded,
+      (p) => p.slug === rawSlug || p.slug === decoded || safeDecode(p.slug) === decoded,
     );
     if (!summary) return null;
     return this.load<WikiPage>(`pages/${summary.id}.json`);
