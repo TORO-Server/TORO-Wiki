@@ -27,7 +27,7 @@ seesaa: https://seesaawiki.jp/toro_server/d/MenuBar1
 
 ## Dynmap （ワールドマップ）
 
-- [メインサーバー](http://map.torosaba.net)
+- [メインサーバー](https://map.torosaba.net/)
 
 ## 外部リンク
 
