@@ -33,7 +33,7 @@ jobs:
       - name: Check attachments
         # 公開するのは画像だけ (HTML や SVG を、サイトと同じ場所から配らない)
         run: |
-          bad=$(find docs/attachments -type f -name '*.*' ! -iregex '.*\.\(png\|jpe?g\|gif\|webp\)')
+          bad=$(find docs/attachments -type f ! -iregex '.*\.\(png\|jpe?g\|gif\|webp\)')
           if [ -n "$bad" ]; then
             echo "$bad"
             exit 1
