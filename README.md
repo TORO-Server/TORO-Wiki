@@ -80,7 +80,3 @@ npm run background -- spawn --frames 30   # 試し撮り (.cache/background/spaw
   カメラの距離・角度・長さなどは [`scripts/background.config.ts`](scripts/background.config.ts) で変えられます。
 - 1 か所 12 秒、1080p の AV1 と 720p の H.264、ポスター画像を作ります。`public/background/background.json` があると、サイトが自動で動画を流します (ないときは XP の青い壁紙)。
 - 動きを減らす設定の人や省データモードの人には、動画の代わりにポスター画像を出します。
-
-## ライセンス
-
-コード: MIT License。Wiki の文章は、それぞれの執筆者のものです。
