@@ -120,10 +120,47 @@ export class WikiPageView {
       const p = this.current();
       const summary = this.idx()?.pages.find((x) => x.slug === rawSlug || x.slug === decodedSlug);
       if (p) {
+        const canonicalPath = `/${encodeURIComponent(p.slug)}`;
+        const canonicalUrl = `${SITE.url}${canonicalPath}`;
+        const articleJsonLd: Record<string, unknown> = {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: p.title,
+          url: canonicalUrl,
+          ...(summary?.excerpt ? { description: summary.excerpt } : {}),
+          ...(p.updated ? { dateModified: p.updated } : {}),
+        };
+        const breadcrumbJsonLd: Record<string, unknown> = {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: `${SITE.url}/`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Wiki index',
+              item: `${SITE.url}/wiki`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: p.title,
+              item: canonicalUrl,
+            },
+          ],
+        };
         this.seo.set({
           title: p.title,
           description: summary?.excerpt,
-          path: `/${encodeURIComponent(p.slug)}`,
+          path: canonicalPath,
+          type: 'article',
+          updated: p.updated,
+          jsonLd: [articleJsonLd, breadcrumbJsonLd],
         });
       } else if (this.page.status() === 'resolved') {
         this.seo.set({
