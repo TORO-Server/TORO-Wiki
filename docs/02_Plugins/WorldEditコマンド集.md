@@ -82,4 +82,4 @@ WEは範囲指定がとても**重要**！範囲指定を制すものが**WE**�
 | //copy | 選択範囲内のものをコピーする | //copyを実行する時の位置が重要！ |
 
   
-&ref(https://image02.seesaawiki.jp/t/r/toro\_server/41l8sr8uu0.39.54%20(1).png)
+![](../attachments/f6461b7a82b14142f3db2c9881b3e8dd.png)

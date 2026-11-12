@@ -37,7 +37,7 @@ TMCでは楽器練習、イベントの企画、作品の公開、好きな曲�
 <a id="content_1_2"></a>
 #### [2023/02/14] 楽器 INS1014A1 Mini Piano Box
 
-[![INS1014A1](../attachments/422ec5f1c9dab57e3d3a815d1cd6ca8b.png "INS1014A1")](https://image02.seesaawiki.jp/t/r/toro_server/7_dkR2FfhF.38.11.png)  
+[![INS1014A1](../attachments/422ec5f1c9dab57e3d3a815d1cd6ca8b.png "INS1014A1")](../attachments/725ce38938b0c23c3488e1d952ec6f37.png)  
 スポーンの南西の方に作りました。  
 前面のレバーを操作してド-ド#(14音)の音を鳴らせます。  
 コピーOKです。改造する場合は銘板を外してください(内側前左上にもあります)。
