@@ -71,6 +71,6 @@ export class Home {
 
   protected random() {
     const pages = this.visible();
-    if (pages.length) void this.router.navigate(['/wiki', pages[Math.floor(Math.random() * pages.length)].slug]);
+    if (pages.length) void this.router.navigate(['/', pages[Math.floor(Math.random() * pages.length)].slug]);
   }
 }

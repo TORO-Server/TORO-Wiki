@@ -38,7 +38,7 @@ seesaa: https://seesaawiki.jp/toro_server/d/%a5%d7%a5%e9%a5%b0%a5%a4%a5%f3%a1%a6
 | [TrainCarts](../02_Plugins/TrainCarts.md) | RSより複雑なダイヤ設定ができる |  |  |
 | [Vehicles](../03_Transportation/Vehicles.md) | 乗り物に乗れる | Driver |  |
 | [WorldEdit](../02_Plugins/WorldEdit.md) | 大規模な編集をコマンドで行える | Builder(WE権限) |  |
-| [WorldGuard](../02_Plugins/Worldguard.md) | 自分の土地を荒らしから守れる | Builder(WE権限) |  |
+| [WorldGuard](../02_Plugins/WorldGuard.md) | 自分の土地を荒らしから守れる | Builder(WE権限) |  |
 
 <a id="content_2_1"></a>
 ### 26.2アップデートにより使えなくなったプラグイン

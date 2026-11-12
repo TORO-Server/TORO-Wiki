@@ -27,7 +27,7 @@ const PAGE_SIZE = 60;
           <ul>
             @for (p of day.pages; track p.slug) {
               <li>
-                <a [routerLink]="['/wiki', p.slug]">{{ p.title }}</a>
+                <a [routerLink]="['/', p.slug]">{{ p.title }}</a>
                 <span class="cat chip">{{ label(p.category) }}</span>
                 @if (p.author) {
                   <span class="who">{{ p.author }}</span>

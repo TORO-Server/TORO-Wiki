@@ -28,3 +28,11 @@ export const HIDDEN: string[] = ['MenuBar1', 'MenuBar2', 'Experimental', 'プラ
 export const SKIP_UPDATED_MARK = '[skip-updated]';
 // これより前のコミット (seesaa からの移行作業) も数えない。それまでの更新日は seesaa の記録 (frontmatter の updated) を使う
 export const GIT_SINCE = '2026-10-29T00:00:00+09:00';
+
+// 改名前の旧スラッグから新スラッグへのエイリアスマッピング
+export const ALIASES: Record<string, string> = {
+  Worldguard: 'WorldGuard',
+  Clearlag: 'ClearLag',
+  'system-Worldguard': 'system-WorldGuard',
+  'system-Coreprotect': 'system-CoreProtect',
+};
