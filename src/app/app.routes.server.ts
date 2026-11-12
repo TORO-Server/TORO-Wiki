@@ -14,6 +14,10 @@ export const serverRoutes: ServerRoute[] = [
       return index.pages.map((p) => ({ slug: p.slug }));
     },
   },
+  { path: 'Worldguard', renderMode: RenderMode.Client },
+  { path: 'Clearlag', renderMode: RenderMode.Client },
+  { path: 'system-Worldguard', renderMode: RenderMode.Client },
+  { path: 'system-Coreprotect', renderMode: RenderMode.Client },
   { path: 'wiki/:slug', renderMode: RenderMode.Client },
   { path: 'search', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Prerender },

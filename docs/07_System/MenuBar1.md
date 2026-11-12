@@ -40,7 +40,7 @@ seesaa: https://seesaawiki.jp/toro_server/d/MenuBar1
 
 - [WorldEditを使ってみよう！](../02_Plugins/WorldEdit.md)
 - [CoreProtectを使ってログを見てみよう！](../02_Plugins/CoreProtect.md)
-- [WorldGuardで自分の土地を護ろう！](../02_Plugins/Worldguard.md)
+- [WorldGuardで自分の土地を護ろう！](../02_Plugins/WorldGuard.md)
 - [Dynmapでワールドを見てみよう！](../02_Plugins/Dynmap.md)
 - [乗り物で遊ぼう！](../03_Transportation/Vehicles.md)
 
