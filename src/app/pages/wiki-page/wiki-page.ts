@@ -123,12 +123,12 @@ export class WikiPageView {
         this.seo.set({
           title: p.title,
           description: summary?.excerpt,
-          path: `/wiki/${encodeURIComponent(p.slug)}`,
+          path: `/${encodeURIComponent(p.slug)}`,
         });
       } else if (this.page.status() === 'resolved') {
         this.seo.set({
           title: 'ページが見つかりません',
-          path: `/wiki/${encodeURIComponent(decodedSlug)}`,
+          path: `/${encodeURIComponent(decodedSlug)}`,
         });
       }
     });

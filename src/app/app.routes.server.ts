@@ -5,7 +5,7 @@ import type { WikiIndex } from './core/content';
 
 export const serverRoutes: ServerRoute[] = [
   {
-    path: 'wiki/:slug',
+    path: ':slug',
     renderMode: RenderMode.Prerender,
     async getPrerenderParams() {
       const index: WikiIndex = JSON.parse(
@@ -14,6 +14,7 @@ export const serverRoutes: ServerRoute[] = [
       return index.pages.map((p) => ({ slug: p.slug }));
     },
   },
+  { path: 'wiki/:slug', renderMode: RenderMode.Client },
   { path: 'search', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Prerender },
 ];

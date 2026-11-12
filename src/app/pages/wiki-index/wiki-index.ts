@@ -57,6 +57,6 @@ export class WikiIndexPage {
     const pages = this.visible();
     if (!pages.length) return;
     const p = pages[Math.floor(Math.random() * pages.length)];
-    void this.router.navigate(['/wiki', p.slug]);
+    void this.router.navigate(['/', p.slug]);
   }
 }

@@ -132,4 +132,4 @@ export class ContentService {
   }
 }
 
-export const pageLink = (slug: string) => ['/wiki', slug];
+export const pageLink = (slug: string) => ['/', slug];

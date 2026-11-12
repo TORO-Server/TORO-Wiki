@@ -109,7 +109,7 @@ const safeDecode = (s: string): string => {
   }
 };
 
-const pageUrl = (slug: string): string => `/wiki/${encodeURIComponent(slug)}`;
+const pageUrl = (slug: string): string => `/${encodeURIComponent(slug)}`;
 
 /** 見出しと、旧 Wiki から引き継いだ手書きの「目次」を除いた、最初の文章 */
 function makeExcerpt(html: string): string {
