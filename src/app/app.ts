@@ -168,7 +168,7 @@ export class App {
     this.query.set('');
     this.activeSuggestion.set(-1);
     (this.doc.activeElement as HTMLElement | null)?.blur();
-    void this.router.navigate(['/wiki', page.slug]);
+    void this.router.navigate(['/', page.slug]);
   }
 
   protected toggleTheme() {

@@ -60,7 +60,7 @@
           <ul>
             @for (s of siblings(); track s.slug) {
               <li>
-                <a [routerLink]="['/wiki', s.slug]" [class.current]="s.slug === slug()" [attr.aria-current]="s.slug === slug() ? 'page' : null">{{ s.title }}</a>
+                <a [routerLink]="['/', s.slug]" [class.current]="s.slug === slug()" [attr.aria-current]="s.slug === slug() ? 'page' : null">{{ s.title }}</a>
               </li>
             }
           </ul>
@@ -174,7 +174,7 @@
             <h2 id="backlinks-title">このページにリンクしているページ</h2>
             <ul>
               @for (b of backlinks(); track b.slug) {
-                <li><a [routerLink]="['/wiki', b.slug]">{{ b.title }}</a></li>
+                <li><a [routerLink]="['/', b.slug]">{{ b.title }}</a></li>
               }
             </ul>
           </section>
@@ -182,12 +182,12 @@
 
         <nav class="pager" aria-label="前後のページ">
           @if (neighbors().prev; as prev) {
-            <a class="btn" [routerLink]="['/wiki', prev.slug]"><app-icon name="prev" /> {{ prev.title }}</a>
+            <a class="btn" [routerLink]="['/', prev.slug]"><app-icon name="prev" /> {{ prev.title }}</a>
           } @else {
             <span></span>
           }
           @if (neighbors().next; as next) {
-            <a class="btn" [routerLink]="['/wiki', next.slug]">{{ next.title }} <app-icon name="next" /></a>
+            <a class="btn" [routerLink]="['/', next.slug]">{{ next.title }} <app-icon name="next" /></a>
           }
         </nav>
       </article>
@@ -279,7 +279,7 @@
             <p><strong>もしかして:</strong></p>
             <ul>
               @for (s of similar(); track s.slug) {
-                <li><a [routerLink]="['/wiki', s.slug]">{{ s.title }}</a></li>
+                <li><a [routerLink]="['/', s.slug]">{{ s.title }}</a></li>
               }
             </ul>
           </div>

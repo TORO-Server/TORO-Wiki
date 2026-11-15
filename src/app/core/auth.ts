@@ -40,7 +40,7 @@ export class AuthService {
     if (!this.browser) return null;
     this.loading.set(true);
     try {
-      const res = await fetch(`${AUTH_BASE_URL}/api/auth/me`, {
+      const res = await fetch(`${AUTH_BASE_URL}/session`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -65,14 +65,14 @@ export class AuthService {
   login(returnTo?: string) {
     if (!this.browser) return;
     const target = returnTo || window.location.href;
-    window.location.href = `${AUTH_BASE_URL}/api/auth/login?redirect=${encodeURIComponent(target)}`;
+    window.location.href = `${AUTH_BASE_URL}/login?redirect=${encodeURIComponent(target)}`;
   }
 
   async logout(): Promise<void> {
     if (!this.browser) return;
     try {
       // Accept を付けると、リダイレクトではなく JSON で答えてくれる
-      await fetch(`${AUTH_BASE_URL}/api/auth/logout`, {
+      await fetch(`${AUTH_BASE_URL}/logout`, {
         method: 'POST',
         headers: { Accept: 'application/json' },
         credentials: 'include',
@@ -96,7 +96,7 @@ export class AuthService {
       return this.apiToken.value;
     }
     try {
-      const res = await fetch(`${AUTH_BASE_URL}/api/auth/session-token`, {
+      const res = await fetch(`${AUTH_BASE_URL}/session-token`, {
         method: 'POST',
         credentials: 'include',
       });

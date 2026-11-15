@@ -1,5 +1,5 @@
 ---
-title: "Worldguard"
+title: "WorldGuard"
 updated: 2019-01-08T15:32:37+09:00
 author: "hikahikaru17"
 seesaa: https://seesaawiki.jp/toro_server/d/Worldguard

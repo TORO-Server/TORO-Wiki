@@ -63,7 +63,7 @@ function foldWithMap(raw: string) {
         <ol class="hits">
           @for (h of hits(); track h.entry.s) {
             <li class="sheet">
-              <a [routerLink]="['/wiki', h.entry.s]">{{ h.entry.t }}</a>
+              <a [routerLink]="['/', h.entry.s]">{{ h.entry.t }}</a>
               <p [innerHTML]="h.snippet"></p>
             </li>
           } @empty {

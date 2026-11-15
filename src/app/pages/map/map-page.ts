@@ -45,7 +45,7 @@ type Place = (typeof PLACES)[number];
               <p class="actions">
                 <a class="btn" [href]="url(p)" target="_blank" rel="noopener">3D マップで見る <app-icon name="external" /></a>
                 @if (wikiSlug(p); as slug) {
-                  <a class="btn" [routerLink]="['/wiki', slug]">Wiki で読む</a>
+                  <a class="btn" [routerLink]="['/', slug]">Wiki で読む</a>
                 }
               </p>
             </div>

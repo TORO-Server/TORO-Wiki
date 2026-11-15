@@ -1,5 +1,5 @@
 ---
-title: "Coreprotect"
+title: "CoreProtect"
 updated: 2019-01-14T17:59:31+09:00
 author: "hikahikaru17"
 seesaa: https://seesaawiki.jp/toro_server/d/Coreprotect

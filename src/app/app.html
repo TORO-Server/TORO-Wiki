@@ -24,7 +24,7 @@
           <a routerLink="/wiki" routerLinkActive="active">ページ一覧</a>
           <a routerLink="/updates" routerLinkActive="active">更新履歴</a>
           <a routerLink="/map" routerLinkActive="active">3D マップ</a>
-          <a [routerLink]="['/wiki', 'ルール']" routerLinkActive="active">ルール</a>
+          <a [routerLink]="['/', 'ルール']" routerLinkActive="active">ルール</a>
           <button type="button" class="nav-guide-btn" (click)="openEditGuide()">
             <app-icon name="edit" /> 編集ガイド
           </button>
@@ -57,7 +57,7 @@
             <ul id="search-suggest" class="suggest" role="listbox" aria-label="ページ名の候補" (mousedown)="$event.preventDefault()">
               @for (p of suggestions(); track p.slug; let i = $index) {
                 <li role="option" [id]="'suggest-' + i" [class.active]="i === activeSuggestion()" [attr.aria-selected]="i === activeSuggestion()">
-                  <a [routerLink]="['/wiki', p.slug]" (click)="openPage(p); $event.preventDefault()">
+                  <a [routerLink]="['/', p.slug]" (click)="openPage(p); $event.preventDefault()">
                     <span class="s-title">{{ p.title }}</span>
                     <span class="s-note">{{ p.excerpt }}</span>
                   </a>
@@ -73,7 +73,7 @@
         <!-- AI クライアントの接続方法 -->
         <a
           class="tb-btn ai-btn"
-          [routerLink]="['/wiki', 'AIクライアントの接続方法']"
+          [routerLink]="['/', 'AIクライアントの接続方法']"
           aria-label="AI クライアントの接続方法 (Claude / ChatGPT / Gemini)"
           title="AI クライアントの接続方法 (Claude / ChatGPT / Gemini)"
         >
@@ -105,7 +105,7 @@
                 <button type="button" class="menu-item" (click)="openEditGuide()">
                   <app-icon name="edit" /> Wikiの編集方法
                 </button>
-                <a class="menu-item" [routerLink]="['/wiki', 'AIクライアントの接続方法']" (click)="closeMenus()">
+                <a class="menu-item" [routerLink]="['/', 'AIクライアントの接続方法']" (click)="closeMenus()">
                   <app-icon name="network" /> AI クライアントの接続方法
                 </a>
                 <button type="button" class="menu-item danger" (click)="auth.logout()">
@@ -146,13 +146,13 @@
           <a routerLink="/wiki">ページ一覧</a>
           <a routerLink="/updates">更新履歴</a>
           <a routerLink="/map">3D マップ</a>
-          <a [routerLink]="['/wiki', 'ルール']">ルール</a>
+          <a [routerLink]="['/', 'ルール']">ルール</a>
           <button type="button" class="mobile-link edit-guide-link" (click)="openEditGuide()">
             <app-icon name="edit" /> Wiki編集ガイド (Web / GitHub)
           </button>
           <a [href]="site.discord" target="_blank" rel="noopener">Discord</a>
           <hr />
-          <a class="mobile-link" [routerLink]="['/wiki', 'AIクライアントの接続方法']" (click)="closeMenus()">
+          <a class="mobile-link" [routerLink]="['/', 'AIクライアントの接続方法']" (click)="closeMenus()">
             <app-icon name="network" /> AI クライアントの接続方法
           </a>
           @if (auth.user(); as u) {

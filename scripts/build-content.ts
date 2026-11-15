@@ -109,7 +109,7 @@ const safeDecode = (s: string): string => {
   }
 };
 
-const pageUrl = (slug: string): string => `/wiki/${encodeURIComponent(slug)}`;
+const pageUrl = (slug: string): string => `/${encodeURIComponent(slug)}`;
 
 /** 見出しと、旧 Wiki から引き継いだ手書きの「目次」を除いた、最初の文章 */
 function makeExcerpt(html: string): string {
@@ -121,6 +121,26 @@ function makeExcerpt(html: string): string {
   const paragraphs = [...body.matchAll(/<p[\s>][\s\S]*?<\/p>|<p>[\s\S]*?<\/p>/g)].map((m) => stripTags(m[0])).filter((t) => t.length > 1);
   const text = paragraphs.length ? paragraphs.join(' ') : stripTags(body);
   return text.slice(0, 140);
+}
+
+const CSS_COLOR = [/^#[0-9a-f]{3,8}$/i, /^[a-z]+$/i, /^(rgb|hsl)a?\([\d\s,.%/]+\)$/i, /^var\(--[a-z0-9-]+\)$/i];
+
+/**
+ * ページの頭書きを読む。読むのは YAML と JSON だけ。
+ * gray-matter は、頭書きの区切りの行に書かれた言語で読み方を変え、既定では JavaScript も評価する。
+ * ページは Wiki の編集者が書くものなので、ビルドの中でプログラムとして動かさない。読めない頭書きは、無いものとして扱う
+ */
+function frontMatter(raw: string, rel: string): { data: Record<string, unknown>; content: string } {
+  const refuse = (): never => {
+    throw new Error('front matter は YAML か JSON だけ');
+  };
+  try {
+    const { data, content } = matter(raw, { language: 'yaml', engines: { javascript: refuse, coffee: refuse } });
+    return { data, content };
+  } catch (err) {
+    console.warn(`${rel}: 頭書きを読めません (${String(err)})`);
+    return { data: {}, content: raw };
+  }
 }
 
 async function main(): Promise<void> {
@@ -137,7 +157,7 @@ async function main(): Promise<void> {
   for (const file of files) {
     const rel = toPosix(relative(DOCS, file));
     const raw = await readFile(file, 'utf8');
-    const { data: fm, content } = matter(raw);
+    const { data: fm, content } = frontMatter(raw, rel);
     const name = basename(file, '.md');
     const dir = rel.split('/')[0];
     const cat = CATEGORIES.find((c: Category) => c.dir === dir);
@@ -226,8 +246,25 @@ async function main(): Promise<void> {
         ol: ['start'],
         input: ['type', 'checked', 'disabled'],
       },
-      allowedSchemes: ['http', 'https', 'mailto', 'data'],
+      allowedSchemes: ['http', 'https', 'mailto'],
+      // data: は埋め込みの画像だけ
+      allowedSchemesByTag: { img: ['http', 'https', 'data'] },
+      // 記事の見た目に使うものだけ。位置や大きさを変えて、サイトの画面を覆い隠せないようにする
+      allowedStyles: {
+        '*': {
+          color: CSS_COLOR,
+          'background-color': CSS_COLOR,
+          'font-size': [/^\d+(\.\d+)?(px|em|rem|%)$/, /^(x{0,2}-small|small|medium|large|x{1,3}-large)$/],
+          'text-align': [/^(left|right|center|justify)$/],
+          'text-wrap': [/^(wrap|nowrap|balance|pretty)$/],
+        },
+      },
       transformTags: {
+        // チェックボックスの見た目だけ (フォームの部品としては使わせない)
+        input: (_tag: string, attribs: Record<string, string>) => ({
+          tagName: 'input',
+          attribs: { type: 'checkbox', disabled: 'disabled', ...(attribs.checked != null ? { checked: 'checked' } : {}) },
+        }),
         a: (_tag: string, attribs: Record<string, string>) => {
           // href の無い <a id="..."> はリンクではなく、飛び先の目印 (seesaa から引き継いだもの)
           if (attribs.href == null) return { tagName: 'a', attribs: { ...attribs } };

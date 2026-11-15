@@ -39,7 +39,7 @@
       <ul>
         @for (p of g.pages; track p.slug) {
           <li>
-            <a [routerLink]="['/wiki', p.slug]">{{ p.title }}</a>
+            <a [routerLink]="['/', p.slug]">{{ p.title }}</a>
             @if (p.updated) {
               <time [attr.datetime]="p.updated">{{ p.updated | jaDate }}</time>
             }

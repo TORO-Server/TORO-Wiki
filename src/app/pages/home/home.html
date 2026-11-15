@@ -39,7 +39,7 @@
         <button type="button" class="btn" (click)="stage.next(-1)" aria-label="前の場所"><app-icon name="prev" /></button>
         <button type="button" class="btn" (click)="stage.next(1)" aria-label="次の場所"><app-icon name="next" /></button>
         @if (p.slug) {
-          <a [routerLink]="['/wiki', p.slug]">Wiki で読む</a>
+          <a [routerLink]="['/', p.slug]">Wiki で読む</a>
         }
         <a [href]="p.bluemap" target="_blank" rel="noopener">BlueMap で見る</a>
       </p>
@@ -61,11 +61,11 @@
             <li>
               <button type="button" class="guide-link" (click)="ui.openGuide()">★ 記事の編集方法 (Web / GitHub)</button>
             </li>
-            <li><a [routerLink]="['/wiki', 'ルール']">ルール</a></li>
-            <li><a [routerLink]="['/wiki', '利用規約']">利用規約</a></li>
-            <li><a [routerLink]="['/wiki', 'よくある質問']">よくある質問</a></li>
-            <li><a [routerLink]="['/wiki', 'For_those_outside_Japan_日本国外から参加される方へ']">For players outside Japan</a></li>
-            <li><a [routerLink]="['/wiki', 'Discordについて']">Discord について</a></li>
+            <li><a [routerLink]="['/', 'ルール']">ルール</a></li>
+            <li><a [routerLink]="['/', '利用規約']">利用規約</a></li>
+            <li><a [routerLink]="['/', 'よくある質問']">よくある質問</a></li>
+            <li><a [routerLink]="['/', 'For_those_outside_Japan_日本国外から参加される方へ']">For players outside Japan</a></li>
+            <li><a [routerLink]="['/', 'Discordについて']">Discord について</a></li>
           </ul>
         </div>
       </section>

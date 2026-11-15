@@ -25,6 +25,11 @@ video,
   }
 }
 
+// シャッターの裏で入れ替えるときは、フェードしない (拡大のゆっくりした動きだけ残す)
+video.cut {
+  transition: transform 20s cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
 .veil {
   position: absolute;
   inset: 0;

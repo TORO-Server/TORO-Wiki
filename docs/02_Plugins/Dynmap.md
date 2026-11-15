@@ -40,7 +40,7 @@ seesaa: https://seesaawiki.jp/toro_server/d/Dynmap
 <a id="content_1"></a>
 ## Dynmapのリンク
 
-- <del>[旧リンク](http://torosaba.net:60016/)</del> [新リンク](https://map.torosaba.net/)
+- <del>旧リンク</del> [新リンク](https://map.torosaba.net/)
 
 HTTPSに対応したため、map.torosaba.netからでもアクセスできるようになりました。[(お知らせ)](https://discord.com/channels/337838758441517057/338028109364461569/1325099444894437407)
 
