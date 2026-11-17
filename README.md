@@ -6,7 +6,7 @@
 
 ## ページを編集する
 
-ページは [`docs/`](docs/) の Markdown です。カテゴリーはフォルダーで分かれています。
+ページは [`docs/`](docs/) の Markdown (記号を使って書く文章の形式) のファイルです。カテゴリーはフォルダーで分かれています。
 
 | フォルダー | カテゴリー |
 | :--- | :--- |
@@ -22,16 +22,16 @@
 - ページの URL はファイル名です (`docs/01_Guide/ルール.md` → `/wiki/ルール`。空白は `_` になります)。
 - ほかのページへのリンクは相対パスで書きます: `[ルール](../01_Guide/ルール.md)`
 - 画像は `docs/attachments/` に置き、`![説明](../attachments/画像.png)` で貼ります。
-- 先頭の frontmatter は省略できます。`title` を書くとファイル名の代わりにページ名になります。
+- ファイルの先頭にある設定欄 (`---` で囲まれた部分。frontmatter と呼びます) は省略できます。`title` を書くとファイル名の代わりにページ名になります。
   `updated` / `author` / `seesaa` は旧 Wiki から引き継いだ最終更新日・更新者・元のページです。
-  このリポジトリで編集すると、最終更新日と更新者は git の履歴から自動で付きます。
-- Markdown の中に HTML (`<table>` など) も書けます。`<script>` などはビルド時に取り除かれます。
+  このページの文書を GitHub で編集すると、最終更新日と更新者は git の履歴から自動で付きます。
+- Markdown の中に HTML (`<table>` など) も書けます。`<script>` などは、サイトを作るときに取り除かれます。
 
 サイト上の各ページの「このページを編集」から、Discord でログインして直接ブラウザ上で編集するか、GitHub で直接変更を提案できます。
 
 ## Discord ログインと AI コネクタ
 
-ログイン、ブラウザからの編集の保存、AI コネクタは、このリポジトリではなく [TORO-Auth](https://github.com/TORO-Server/TORO-Auth) のサーバーが担当します。
+ログイン、ブラウザからの編集の保存、AI コネクタは、この Wiki の文書ではなく [TORO-Auth](https://github.com/TORO-Server/TORO-Auth) のサーバーが担当します。
 
 - 各サービスの URL と役割は [`docs/07_System/サービスのURLと役割.md`](docs/07_System/サービスのURLと役割.md) が唯一の正本です。URL を書くときは、ここへリンクしてください。
 - 使い方は [`docs/07_System/Discord認証編集とAIコネクタ.md`](docs/07_System/Discord認証編集とAIコネクタ.md) を見てください。
