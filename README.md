@@ -31,7 +31,7 @@
 
 ## Discord ログインと AI コネクタ
 
-ログイン、ブラウザからの編集の保存、AI コネクタは、この Wiki の文書ではなく [TORO-Auth](https://github.com/TORO-Server/TORO-Auth) のサーバーが担当します。
+ログイン、ブラウザからの編集の保存、AI コネクタ (AI から Wiki を使うための接続) は、この Wiki の文書ではなく [TORO-Auth](https://github.com/TORO-Server/TORO-Auth) のサーバーが担当します。
 
 - 各サービスの URL と役割は [`docs/07_System/サービスのURLと役割.md`](docs/07_System/サービスのURLと役割.md) が唯一の正本です。URL を書くときは、ここへリンクしてください。
 - 使い方は [`docs/07_System/Discord認証編集とAIコネクタ.md`](docs/07_System/Discord認証編集とAIコネクタ.md) を見てください。
